@@ -365,7 +365,7 @@ for epoch in range(args.epochs):
 
                 # JDOT optimal coupling (gamma)
                 gamma=ot.emd(ot.unif(src_x.cpu().shape[0]),
-                            ot.unif(trgt_x.cpu().shape[0]),C)
+                            ot.unif(trgt_x.cpu().shape[0]),C.cpu())
                 
                 # update the computed gamma                      
                 gamma = torch.tensor(gamma, device=src_x.device)
