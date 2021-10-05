@@ -339,6 +339,7 @@ for epoch in range(args.epochs):
 
         if data1 is not None and data2 is not None:
             model.eval()
+            gamma = None
             with torch.no_grad():
                 # predict with undistorted shape
                 src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
