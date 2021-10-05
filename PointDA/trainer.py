@@ -271,7 +271,8 @@ for epoch in range(args.epochs):
     if args.DefRec_on_src:
         src_print_losses['DefRec'] = 0.0
     trgt_print_losses = {'DefRec': 0.0}
-    src_count = trgt_count = 0.0
+    deepjdot_print_losses = {"total": 0.0, "cat": 0.0, "align": 0.0}
+    src_count = trgt_count = deepjdot_count =  0.0
 
     batch_idx = 1
     for data1, data2 in zip(src_train_loader, trgt_train_loader):
@@ -395,8 +396,12 @@ for epoch in range(args.epochs):
             align_loss = align_loss(src_x, trgt_x, gamma)
             
             loss = cat_loss + align_loss
-            #loss = criterion(outputs, batch.y)
+
+            deepjdot_print_losses['align'] += align_loss.item() * batch_size
+            deepjdot_print_losses['cat'] += cat_loss.item() * batch_size
+            deepjdot_print_losses['total'] += loss.item() * batch_size
             loss.backward()
+            deepjdot_count += batch_size
 
         opt.step()
         batch_idx += 1
@@ -408,6 +413,8 @@ for epoch in range(args.epochs):
     src_acc = io.print_progress("Source", "Trn", epoch, src_print_losses)
     trgt_print_losses = {k: v * 1.0 / trgt_count for (k, v) in trgt_print_losses.items()}
     trgt_acc = io.print_progress("Target", "Trn", epoch, trgt_print_losses)
+    deepjdot_print_losses = {k: v * 1.0 / deepjdot_count for (k, v) in deepjdot_print_losses.items()}
+    deepjdot_acc = io.print_progress("DeepJDOT", "Trn", epoch, deepjdot_print_losses)
 
     #===================
     # Validation
