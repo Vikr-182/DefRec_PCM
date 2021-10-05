@@ -364,11 +364,11 @@ for epoch in range(args.epochs):
                 C= alpha*C0+C1
 
                 # JDOT optimal coupling (gamma)
-                gamma=ot.emd(ot.unif(src_x.shape[0]),
-                            ot.unif(trgt_x.shape[0]),C)
+                gamma=ot.emd(ot.unif(src_x.cpu().shape[0]),
+                            ot.unif(trgt_x.cpu().shape[0]),C)
                 
                 # update the computed gamma                      
-                gamma = torch.tensor(gamma)
+                gamma = torch.tensor(gamma, device=src_x.device)
                 
             model.train();
             # predict with undistorted shape
