@@ -280,7 +280,7 @@ for epoch in range(args.epochs):
     src_count = trgt_count = deepjdot_count =  0.0
 
     batch_idx = 1
-    for data1, data2 in tqdm.tqdm(zip(src_train_loader, trgt_train_loader), total=len(src_trainset) // args.batch_size):
+    for data1, data2 in tqdm.tqdm(zip(src_train_loader, trgt_train_loader), total=len(src_trainset.train_ind) // args.batch_size):
         opt.zero_grad()
 
         #### source data ####
