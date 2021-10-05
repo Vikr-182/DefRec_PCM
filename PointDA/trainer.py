@@ -8,6 +8,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.data import DataLoader
 import sklearn.metrics as metrics
 import argparse
+import ot
 import copy
 import utils.log
 from PointDA.data.dataloader import ScanNet, ModelNet, ShapeNet, label_to_idx
@@ -65,6 +66,57 @@ parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 
 args = parser.parse_args()
+
+def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
+    '''
+    classifier loss based on categorical cross entropy in the target domain
+    y_true:  
+    y_pred: pytorch tensor which has gradients
+    
+    0:batch_size - is source samples
+    batch_size:end - is target samples
+    gamma - is the optimal transport plan
+    '''   
+    # pytorch has the mean-inbuilt, 
+    source_loss = torch.nn.functional.cross_entropy(source_ypred,
+                                                    torch.argmax(ys,dim=1)) 
+    
+    # categorical cross entropy loss
+    ypred_t = torch.log(ypred_t)
+    # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
+    loss = -torch.matmul(ys, torch.transpose(ypred_t,1,0))
+    # returns source loss + target loss
+    
+    # todo: check function of tloss train_cl, and sloss
+    return (torch.sum(gamma * loss) + source_loss)
+
+# L2 distance
+def L2_dist(x,y):
+    '''
+    compute the squared L2 distance between two matrics
+    '''
+    distx = torch.reshape(torch.sum(torch.square(x),1), (-1,1))
+    disty = torch.reshape(torch.sum(torch.square(y),1), (1,-1))
+    dist = distx + disty
+    dist -= 2.0*torch.matmul(x, torch.transpose(y,0,1))  
+    return dist
+    
+# feature allignment loss
+def align_loss(g_source, g_target, gamma):
+    '''
+    source and target alignment loss in the intermediate layers of the target model
+    allignment is performed in the target model (both source and target features are from target model)
+    y-pred - is the value of intermediate layers in the target model
+    1:batch_size - is source samples
+    batch_size:end - is target samples 
+    gamma - ot parameter
+    '''
+    # source domain features            
+    #gs = y_pred[:batch_size,:] # this should not work????
+    # target domain features
+    #gt = y_pred[batch_size:,:]
+    gdist = L2_dist(g_source,g_target)  
+    return torch.sum(gamma * (gdist))
 
 # ==================
 # init
@@ -234,6 +286,7 @@ for epoch in range(args.epochs):
             src_data_orig = src_data.clone()
             device = torch.device("cuda:" + str(src_data.get_device()) if args.cuda else "cpu")
 
+            # self-supervised
             if args.DefRec_on_src:
                 src_data, src_mask = DefRec.deform_input(src_data, lookup, args.DefRec_dist, device)
                 src_logits = model(src_data, activate_DefRec=True)
@@ -242,6 +295,7 @@ for epoch in range(args.epochs):
                 src_print_losses['total'] += loss.item() * batch_size
                 loss.backward()
 
+            # supervised
             if args.apply_PCM:
                 src_data = src_data_orig.clone()
                 src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
@@ -276,6 +330,73 @@ for epoch in range(args.epochs):
             trgt_print_losses['DefRec'] += loss.item() * batch_size
             loss.backward()
             trgt_count += batch_size
+
+        if data1 is not None and data2 is not None:
+            model.eval();
+            with torch.no_grad():
+                # predict with undistorted shape
+                src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
+                # change to [batch_size, num_coordinates, num_points]
+                src_data = src_data.permute(0, 2, 1)
+                batch_size = src_data.size()[0]
+                src_data_orig = src_data.clone()
+                device = torch.device("cuda:" + str(src_data.get_device()) if args.cuda else "cpu")
+
+                src_data = src_data_orig.clone()
+                src_cls_logits, src_x = model(src_data, activate_DefRec=False, return_intermediate=True)
+
+
+                trgt_data, trgt_label = data2[0].to(device), data2[1].to(device).squeeze()
+                trgt_data = trgt_data.permute(0, 2, 1)
+                batch_size = trgt_data.size()[0]
+                trgt_data_orig = trgt_data.clone()
+                device = torch.device("cuda:" + str(trgt_data.get_device()) if args.cuda else "cpu")
+
+                trgt_data = trgt_data_orig.clone()
+                trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
+
+                # logits output
+                alpha = 0.6
+                C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
+                C1 = torch.cdist(src_logits, trgt_logits, p=2)**2
+                # JDOT ground metric
+                C= alpha*C0+C1
+
+                # JDOT optimal coupling (gamma)
+                gamma=ot.emd(ot.unif(src_x.shape[0]),
+                            ot.unif(trgt_x.shape[0]),C)
+                
+                # update the computed gamma                      
+                gamma = torch.tensor(gamma)
+                
+            model.train();
+            # predict with undistorted shape
+            src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
+            # change to [batch_size, num_coordinates, num_points]
+            src_data = src_data.permute(0, 2, 1)
+            batch_size = src_data.size()[0]
+            src_data_orig = src_data.clone()
+            device = torch.device("cuda:" + str(src_data.get_device()) if args.cuda else "cpu")
+
+            src_data = src_data_orig.clone()
+            src_cls_logits, src_x = model(src_data, activate_DefRec=False, return_intermediate=True)
+
+
+            trgt_data, trgt_label = data2[0].to(device), data2[1].to(device).squeeze()
+            trgt_data = trgt_data.permute(0, 2, 1)
+            batch_size = trgt_data.size()[0]
+            trgt_data_orig = trgt_data.clone()
+            device = torch.device("cuda:" + str(trgt_data.get_device()) if args.cuda else "cpu")
+
+            trgt_data = trgt_data_orig.clone()
+            trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
+
+            cat_loss   = classifier_cat_loss(src_logits, trgt_logits, ys_cat)
+            align_loss = align_loss(, gt_batch)
+            
+            loss = cat_loss + align_loss
+            #loss = criterion(outputs, batch.y)
+            loss.backward()
 
         opt.step()
         batch_idx += 1
