@@ -356,9 +356,9 @@ for epoch in range(args.epochs):
                 trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
                 # logits output
-                alpha = 0.6
+                alpha = 0.6 # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
-                C1 = torch.cdist(src_logits, trgt_logits, p=2)**2
+                C1 = torch.cdist(src_logits['cls'], trgt_logits['cls'], p=2)**2
                 # JDOT ground metric
                 C= alpha*C0+C1
 
@@ -391,8 +391,8 @@ for epoch in range(args.epochs):
             trgt_data = trgt_data_orig.clone()
             trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
-            cat_loss   = classifier_cat_loss(src_logits, trgt_logits, ys_cat)
-            align_loss = align_loss(, gt_batch)
+            cat_loss   = classifier_cat_loss(src_logits['cls'], trgt_logits['cls'], torch.nn.functional.one_hot(src_label, num_classes=10), gamma)
+            align_loss = align_loss(src_x, trgt_x, gamma)
             
             loss = cat_loss + align_loss
             #loss = criterion(outputs, batch.y)
