@@ -16,6 +16,8 @@ from PointDA.Models import PointNet, DGCNN
 from utils import pc_utils
 from DefRec_and_PCM import DefRec, PCM
 
+import tqdm.auto as tqdm
+
 NWORKERS=4
 MAX_LOSS = 9 * (10**9)
 
@@ -78,13 +80,16 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     gamma - is the optimal transport plan
     '''   
     # pytorch has the mean-inbuilt, 
-    source_loss = torch.nn.functional.cross_entropy(source_ypred,
-                                                    torch.argmax(ys,dim=1)) 
+    source_loss = torch.nn.functional.cross_entropy(source_ypred,ys)
+
+    ys_cat = torch.nn.functional.one_hot(ys, num_classes=10).type(ypred_t.dtype) 
     
     # categorical cross entropy loss
-    ypred_t = torch.log(ypred_t)
+    # ypred_t = torch.log(ypred_t)
+    ypred_t = torch.nn.functional.log_softmax(ypred_t)
+
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
-    loss = -torch.matmul(ys.type(ypred_t.dtype), torch.transpose(ypred_t,1,0))
+    loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
     # returns source loss + target loss
     
     # todo: check function of tloss train_cl, and sloss
@@ -275,7 +280,7 @@ for epoch in range(args.epochs):
     src_count = trgt_count = deepjdot_count =  0.0
 
     batch_idx = 1
-    for data1, data2 in zip(src_train_loader, trgt_train_loader):
+    for data1, data2 in tqdm.tqdm(zip(src_train_loader, trgt_train_loader), total=len(src_trainset)):
         opt.zero_grad()
 
         #### source data ####
@@ -333,7 +338,7 @@ for epoch in range(args.epochs):
             trgt_count += batch_size
 
         if data1 is not None and data2 is not None:
-            model.eval();
+            model.eval()
             with torch.no_grad():
                 # predict with undistorted shape
                 src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
@@ -368,11 +373,10 @@ for epoch in range(args.epochs):
                             ot.unif(trgt_x.cpu().shape[0]),C.cpu())
                 
                 # update the computed gamma                      
-                gamma = torch.tensor(gamma, device=src_x.device)
+                gamma = torch.as_tensor(gamma, device=src_x.device)
 
-                del src_x, src_data, 
                 
-            model.train();
+            model.train()
             # predict with undistorted shape
             src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
             # change to [batch_size, num_coordinates, num_points]
@@ -394,7 +398,7 @@ for epoch in range(args.epochs):
             trgt_data = trgt_data_orig.clone()
             trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
-            cat_loss   = classifier_cat_loss(src_cls_logits['cls'], trgt_cls_logits['cls'], torch.nn.functional.one_hot(src_label, num_classes=10), gamma)
+            cat_loss   = classifier_cat_loss(src_cls_logits['cls'], trgt_cls_logits['cls'], src_label, gamma)
             align_loss_batch = align_loss(src_x, trgt_x, gamma)
             
             loss = cat_loss + align_loss_batch
