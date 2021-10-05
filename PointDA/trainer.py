@@ -66,6 +66,8 @@ parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
+parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
+parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 
 args = parser.parse_args()
 
@@ -302,43 +304,46 @@ for epoch in range(args.epochs):
                 loss.backward()
 
             # supervised
-            if args.apply_PCM:
-                src_data = src_data_orig.clone()
-                src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
-                src_cls_logits = model(src_data, activate_DefRec=False)
-                loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
-                src_print_losses['mixup'] += loss.item() * batch_size
-                src_print_losses['total'] += loss.item() * batch_size
-                loss.backward()
+            if args.supervised:
+                if args.apply_PCM:
+                    src_data = src_data_orig.clone()
+                    src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
+                    src_cls_logits = model(src_data, activate_DefRec=False)
+                    loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
+                    src_print_losses['mixup'] += loss.item() * batch_size
+                    src_print_losses['total'] += loss.item() * batch_size
+                    loss.backward()
 
-            else:
-                src_data = src_data_orig.clone()
-                # predict with undistorted shape
-                src_cls_logits = model(src_data, activate_DefRec=False)
-                loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
-                src_print_losses['cls'] += loss.item() * batch_size
-                src_print_losses['total'] += loss.item() * batch_size
-                loss.backward()
+                else:
+                    src_data = src_data_orig.clone()
+                    # predict with undistorted shape
+                    src_cls_logits = model(src_data, activate_DefRec=False)
+                    loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
+                    src_print_losses['cls'] += loss.item() * batch_size
+                    src_print_losses['total'] += loss.item() * batch_size
+                    loss.backward()
 
             src_count += batch_size
 
         #### target data ####
         if data2 is not None:
-            trgt_data, trgt_label = data2[0].to(device), data2[1].to(device).squeeze()
-            trgt_data = trgt_data.permute(0, 2, 1)
-            batch_size = trgt_data.size()[0]
-            trgt_data_orig = trgt_data.clone()
-            device = torch.device("cuda:" + str(trgt_data.get_device()) if args.cuda else "cpu")
+            if args.DefRec_on_trgt:
+                trgt_data, trgt_label = data2[0].to(device), data2[1].to(device).squeeze()
+                trgt_data = trgt_data.permute(0, 2, 1)
+                batch_size = trgt_data.size()[0]
+                trgt_data_orig = trgt_data.clone()
+                device = torch.device("cuda:" + str(trgt_data.get_device()) if args.cuda else "cpu")
 
-            trgt_data, trgt_mask = DefRec.deform_input(trgt_data, lookup, args.DefRec_dist, device)
-            trgt_logits = model(trgt_data, activate_DefRec=True)
-            loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
-            trgt_print_losses['DefRec'] += loss.item() * batch_size
-            loss.backward()
-            trgt_count += batch_size
+                trgt_data, trgt_mask = DefRec.deform_input(trgt_data, lookup, args.DefRec_dist, device)
+                trgt_logits = model(trgt_data, activate_DefRec=True)
+                loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
+                trgt_print_losses['DefRec'] += loss.item() * batch_size
+                loss.backward()
+                trgt_count += batch_size
 
         if data1 is not None and data2 is not None:
             model.eval()
+            gamma = None
             with torch.no_grad():
                 # predict with undistorted shape
                 src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
