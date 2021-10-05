@@ -84,7 +84,7 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     # categorical cross entropy loss
     ypred_t = torch.log(ypred_t)
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
-    loss = -torch.matmul(ys, torch.transpose(ypred_t,1,0))
+    loss = -torch.matmul(ys.type(ypred_t.dtype), torch.transpose(ypred_t,1,0))
     # returns source loss + target loss
     
     # todo: check function of tloss train_cl, and sloss
@@ -369,6 +369,8 @@ for epoch in range(args.epochs):
                 
                 # update the computed gamma                      
                 gamma = torch.tensor(gamma, device=src_x.device)
+
+                del src_x, src_data, 
                 
             model.train();
             # predict with undistorted shape
