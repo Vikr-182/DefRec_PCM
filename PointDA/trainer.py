@@ -339,7 +339,7 @@ for epoch in range(args.epochs):
                 loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
                 trgt_print_losses['DefRec'] += loss.item() * batch_size
                 loss.backward()
-                trgt_count += batch_size
+            trgt_count += batch_size
 
         if data1 is not None and data2 is not None:
             model.eval()
