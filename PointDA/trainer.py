@@ -395,11 +395,11 @@ for epoch in range(args.epochs):
             trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
             cat_loss   = classifier_cat_loss(src_cls_logits['cls'], trgt_cls_logits['cls'], torch.nn.functional.one_hot(src_label, num_classes=10), gamma)
-            align_loss = align_loss(src_x, trgt_x, gamma)
+            align_loss_batch = align_loss(src_x, trgt_x, gamma)
             
-            loss = cat_loss + align_loss
+            loss = cat_loss + align_loss_batch
 
-            deepjdot_print_losses['align'] += align_loss.item() * batch_size
+            deepjdot_print_losses['align'] += align_loss_batch.item() * batch_size
             deepjdot_print_losses['cat'] += cat_loss.item() * batch_size
             deepjdot_print_losses['total'] += loss.item() * batch_size
             loss.backward()
