@@ -201,7 +201,7 @@ class DGCNN(nn.Module):
         self.C = classifier(args, num_class)
         self.DefRec = RegionReconstruction(args, num_f_prev + 1024)
 
-    def forward(self, x, activate_DefRec=False):
+    def forward(self, x, activate_DefRec=False, return_intermediate=False):
         batch_size = x.size(0)
         num_points = x.size(2)
         logits = {}
@@ -240,6 +240,8 @@ class DGCNN(nn.Module):
             DefRec_input = torch.cat((x_cat, x5.unsqueeze(2).repeat(1, 1, num_points)), dim=1)
             logits["DefRec"] = self.DefRec(DefRec_input)
 
+        if return_intermediate:
+            return logits, x
         return logits
 
 
