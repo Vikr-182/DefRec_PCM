@@ -199,6 +199,7 @@ class DGCNN(nn.Module):
         self.conv5 = nn.Conv1d(num_f_prev, 1024, kernel_size=1, bias=False)
 
         self.C = classifier(args, num_class)
+        self.JDOT = classifier(args, num_class)
         self.DefRec = RegionReconstruction(args, num_f_prev + 1024)
 
     def forward(self, x, activate_DefRec=False, return_intermediate=False):
