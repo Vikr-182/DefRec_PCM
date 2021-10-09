@@ -14777,3 +14777,52 @@ FileNotFoundError: [Errno 2] No such file or directory: 'conda': 'conda'
 2021-10-09 15:10:08,762 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
 2021-10-09 15:10:08,762 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
 2021-10-09 15:10:08,763 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:09,538 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/wandb-summary.json
+2021-10-09 15:10:09,779 DEBUG   HandlerThread:28773 [handler.py:handle_request():126] handle_request: stop_status
+2021-10-09 15:10:09,780 DEBUG   SenderThread:28773 [sender.py:send_request():199] send_request: stop_status
+2021-10-09 15:10:10,539 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:12,540 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:13,316 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:13,317 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:13,318 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:13,476 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:13,477 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:13,478 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:13,541 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/wandb-summary.json
+2021-10-09 15:10:13,784 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:13,785 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:13,786 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:13,786 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:13,787 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:13,788 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:13,788 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:13,788 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:13,789 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:14,542 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/wandb-summary.json
+2021-10-09 15:10:14,542 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:16,544 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:18,327 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:18,328 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:18,329 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:18,485 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:18,485 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:18,486 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:18,545 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/wandb-summary.json
+2021-10-09 15:10:18,546 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:18,793 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:18,794 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:18,795 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:18,795 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:18,795 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:18,796 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:18,796 DEBUG   SenderThread:28773 [sender.py:send():185] send: history
+2021-10-09 15:10:18,797 DEBUG   SenderThread:28773 [sender.py:send():185] send: summary
+2021-10-09 15:10:18,797 INFO    SenderThread:28773 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 15:10:19,547 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/wandb-summary.json
+2021-10-09 15:10:19,547 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:20,548 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:25,136 DEBUG   HandlerThread:28773 [handler.py:handle_request():126] handle_request: stop_status
+2021-10-09 15:10:25,137 DEBUG   SenderThread:28773 [sender.py:send_request():199] send_request: stop_status
+2021-10-09 15:10:33,556 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:34,558 INFO    Thread-8  :28773 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_140021-2ccn5549/files/output.log
+2021-10-09 15:10:34,863 DEBUG   SenderThread:28773 [sender.py:send():185] send: stats
