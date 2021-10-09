@@ -238,7 +238,7 @@ class DGCNN(nn.Module):
 
         logits["cls"], embeddings = self.C(x)
         if self.args.DeepJDOT_head:
-            logits["DeepJDOT"] = self.DeepJDOT(x)
+            logits["DeepJDOT"], embeddings = self.DeepJDOT(x)
 
         if activate_DefRec:
             DefRec_input = torch.cat((x_cat, x5.unsqueeze(2).repeat(1, 1, num_points)), dim=1)
