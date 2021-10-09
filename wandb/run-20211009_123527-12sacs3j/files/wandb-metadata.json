@@ -1,0 +1,29 @@
+{
+    "os": "Linux-4.15.0-107-generic-x86_64-with-debian-stretch-sid",
+    "python": "3.7.9",
+    "heartbeatAt": "2021-10-09T07:08:04.738825",
+    "startedAt": "2021-10-09T07:05:27.910476",
+    "docker": null,
+    "gpu": "GeForce GTX 1080 Ti",
+    "gpu_count": 1,
+    "cpu_count": 40,
+    "cuda": "10.2.89",
+    "args": [
+        "--dataroot",
+        "/scratch/shapenets/pointda",
+        "--batch_size",
+        "16"
+    ],
+    "state": "running",
+    "program": "PointDA/trainer.py",
+    "codePath": "PointDA/trainer.py",
+    "git": {
+        "remote": "https://github.com/IdanAchituve/DefRec_and_PCM",
+        "commit": "40b9aefbcfbc41bc3e01cde99772583e5bdf1e74"
+    },
+    "email": "vikrant.dewangan@research.iiit.ac.in",
+    "root": "/home2/vikrant.dewangan/pcc/DefRec_and_PCM",
+    "host": "gnode13",
+    "username": "vikrant.dewangan",
+    "executable": "/home2/vikrant.dewangan/anaconda3/envs/forecasting/bin/python3"
+}
