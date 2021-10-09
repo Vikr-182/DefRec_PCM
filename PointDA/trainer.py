@@ -79,7 +79,7 @@ parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax
 parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use DeepJDOT')
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
-parser.add_arguemtn('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
+parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
 
 args = parser.parse_args()
 
