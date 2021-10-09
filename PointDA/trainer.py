@@ -393,7 +393,7 @@ for epoch in range(args.epochs):
                 # logits output
                 alpha = 0.6 # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
-                if args.use_softmax:
+                if args.softmax:
                     C1 = softmax_loss(src_label, trgt_cls_logits['cls'])
                 else:
                     C1 = torch.cdist(src_label.unsqueeze(-1), trgt_cls_logits['cls'], p=2)**2
