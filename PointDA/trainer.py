@@ -337,7 +337,7 @@ for epoch in range(args.epochs):
                 loss = DefRec.calc_loss(args, src_logits, src_data_orig, src_mask)
                 src_print_losses['DefRec'] += loss.item() * batch_size
                 src_print_losses['total'] += loss.item() * batch_size
-                if cnt % 50 == 0: 
+                if cnt % 5 == 0: 
                     wandb.log({"defrec_ssl_src_loss": loss.item()})
                 loss.backward()
 
@@ -350,7 +350,7 @@ for epoch in range(args.epochs):
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
-                    if cnt % 50 == 0:
+                    if cnt % 5 == 0:
                         wandb.log({"pcm_src_loss": loss.item()})
                     loss.backward()
 
@@ -361,7 +361,7 @@ for epoch in range(args.epochs):
                     loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
                     src_print_losses['cls'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
-                    if cnt % 50 == 0:                    
+                    if cnt % 5 == 0:                    
                         wandb.log({"defrec_src_loss": loss.item()})
                     loss.backward()
 
@@ -380,7 +380,7 @@ for epoch in range(args.epochs):
                 trgt_logits = model(trgt_data, activate_DefRec=True)
                 loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
                 trgt_print_losses['DefRec'] += loss.item() * batch_size
-                if cnt % 50 == 0:                
+                if cnt % 5 == 0:                
                     wandb.log({"defrec_trgt_loss": loss.item()})
                 loss.backward()
             trgt_count += batch_size
@@ -462,7 +462,7 @@ for epoch in range(args.epochs):
             deepjdot_print_losses['align'] += align_loss_batch.item() * batch_size
             deepjdot_print_losses['cat'] += cat_loss.item() * batch_size
             deepjdot_print_losses['total'] += loss.item() * batch_size
-            if cnt % 50 == 0:            
+            if cnt % 5 == 0:            
                 wandb.log({"deepJDOT_loss_total": loss.item()})
                 wandb.log({"deepJDOT_align_loss_total": align_loss_batch.item()})
                 wandb.log({"deepJDOT_cat_loss_total": cat_loss_batch.item()})
