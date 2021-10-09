@@ -76,6 +76,7 @@ parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
 parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax')
+parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use DeepJDOT')
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 
@@ -387,8 +388,8 @@ for epoch in range(args.epochs):
         string_to_be_taken = 'cls'
         if args.DeepJDOT_head:
             # separate head for DeepJDOT
-            string_to_be_taken = 'DeepJDOT'  
-        if data1 is not None and data2 is not None:
+            string_to_be_taken = 'DeepJDOT'
+        if data1 is not None and data2 is not None and args.use_DeepJDOT:
             model.eval()
             gamma = None
             with torch.no_grad():
