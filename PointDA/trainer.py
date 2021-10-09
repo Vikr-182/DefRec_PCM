@@ -406,7 +406,7 @@ for epoch in range(args.epochs):
                 if args.softmax:
                     C1 = softmax_loss(src_label, trgt_cls_logits['cls'])
                 else:
-                    C1 = torch.cdist(src_label, trgt_cls_logits['cls'], p=2)**2
+                    C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10), trgt_cls_logits['cls'], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
                 C= alpha*C0+C1
