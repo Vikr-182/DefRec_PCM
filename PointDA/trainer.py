@@ -79,6 +79,7 @@ parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax
 parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use DeepJDOT')
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
+parser.add_arguemtn('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
 
 args = parser.parse_args()
 
@@ -277,11 +278,17 @@ def test(test_loader, model=None, set_type="Target", partition="Val", epoch=0):
             batch_size = data.size()[0]
 
             logits = model(data, activate_DefRec=False)
-            loss = criterion(logits["cls"], labels)
+            if args.use_DeepJDOT and args.DeepJDOT_head and args.DeepJDOT_classifier:
+                loss = criterion(logits["DeepJDOT"], labels)
+            else:
+                loss = criterion(logits["cls"], labels)
             print_losses['cls'] += loss.item() * batch_size
 
             # evaluation metrics
-            preds = logits["cls"].max(dim=1)[1]
+            if args.use_DeepJDOT and args.DeepJDOT_head and args.DeepJDOT_classifier:
+                preds = logits["DeepJDOT"].max(dim=1)[1]
+            else:
+                preds = logits["cls"].max(dim=1)[1]
             test_true.append(labels.cpu().numpy())
             test_pred.append(preds.detach().cpu().numpy())
             count += batch_size
