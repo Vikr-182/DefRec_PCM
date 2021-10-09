@@ -465,7 +465,7 @@ for epoch in range(args.epochs):
             if cnt % 5 == 0:            
                 wandb.log({"deepJDOT_loss_total": loss.item()})
                 wandb.log({"deepJDOT_align_loss_total": align_loss_batch.item()})
-                wandb.log({"deepJDOT_cat_loss_total": cat_loss_batch.item()})
+                wandb.log({"deepJDOT_cat_loss_total": cat_loss.item()})
             loss.backward()
             deepjdot_count += batch_size
 
