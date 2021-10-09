@@ -461,7 +461,7 @@ for epoch in range(args.epochs):
             trgt_data = trgt_data_orig.clone()
             trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
-            cat_loss   = classifier_cat_loss(src_cls_logits['cls'], trgt_cls_logits['cls'], src_label, gamma)
+            cat_loss   = classifier_cat_loss(src_cls_logits[string_to_be_taken], trgt_cls_logits[string_to_be_taken], src_label, gamma)
             align_loss_batch = align_loss(src_x, trgt_x, gamma)
             
             loss = cat_loss + align_loss_batch
