@@ -182,7 +182,7 @@ class PointNet(nn.Module):
 
 
 class DGCNN(nn.Module):
-    def __init__(self, args, num_class=10, deepJDOT_head=False):
+    def __init__(self, args, num_class=10):
         super(DGCNN, self).__init__()
         self.args = args
         self.k = K
@@ -237,7 +237,7 @@ class DGCNN(nn.Module):
         x = x5
 
         logits["cls"], embeddings = self.C(x)
-        if self.deepJDOT_head:
+        if self.args.deepJDOT_head:
             logits["DeepJDOT"] = self.DeepJDOT(x)
 
         if activate_DefRec:

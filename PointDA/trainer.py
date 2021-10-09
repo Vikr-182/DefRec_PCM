@@ -71,6 +71,7 @@ parser.add_argument('--DefRec_weight', type=float, default=0.5, help='weight of 
 parser.add_argument('--mixup_params', type=float, default=1.0, help='a,b in beta distribution')
 parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
+parser.add_argument('--alpha', type=float, default=0.6, help='Alpha')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
@@ -405,7 +406,7 @@ for epoch in range(args.epochs):
                 trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
                 # logits output
-                alpha = 0.6 # Will have to check use later.
+                alpha = args.alpha # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
                 if args.softmax:
                     C1 = softmax_loss(src_label, trgt_cls_logits[string_to_be_taken])
