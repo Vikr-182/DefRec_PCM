@@ -11,12 +11,19 @@ import argparse
 import ot
 import copy
 import utils.log
+import wandb
 from PointDA.data.dataloader import ScanNet, ModelNet, ShapeNet, label_to_idx
 from PointDA.Models import PointNet, DGCNN
 from utils import pc_utils
 from DefRec_and_PCM import DefRec, PCM
 
 import tqdm.auto as tqdm
+
+
+import wandb
+
+# 1. Start a new run
+wandb.init(project='pcc', entity='vikr-182')   
 
 NWORKERS=4
 MAX_LOSS = 9 * (10**9)
@@ -336,6 +343,7 @@ for epoch in range(args.epochs):
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
+                    wandb.log({"pcm_src_loss": loss.item()})
                     loss.backward()
 
                 else:
@@ -345,6 +353,7 @@ for epoch in range(args.epochs):
                     loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
                     src_print_losses['cls'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
+                    wandb.log({"defrec_src_loss": loss.item()})
                     loss.backward()
 
             src_count += batch_size
@@ -362,6 +371,7 @@ for epoch in range(args.epochs):
                 trgt_logits = model(trgt_data, activate_DefRec=True)
                 loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
                 trgt_print_losses['DefRec'] += loss.item() * batch_size
+                wandb.log({"defrec_trgt_loss": loss.item()})
                 loss.backward()
             trgt_count += batch_size
 
@@ -396,7 +406,7 @@ for epoch in range(args.epochs):
                 if args.softmax:
                     C1 = softmax_loss(src_label, trgt_cls_logits['cls'])
                 else:
-                    C1 = torch.cdist(src_label.unsqueeze(-1), trgt_cls_logits['cls'], p=2)**2
+                    C1 = torch.cdist(src_label, trgt_cls_logits['cls'], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
                 C= alpha*C0+C1
@@ -439,6 +449,7 @@ for epoch in range(args.epochs):
             deepjdot_print_losses['align'] += align_loss_batch.item() * batch_size
             deepjdot_print_losses['cat'] += cat_loss.item() * batch_size
             deepjdot_print_losses['total'] += loss.item() * batch_size
+            wandb.log({"deepJDOT_loss": loss.item()})
             loss.backward()
             deepjdot_count += batch_size
 
