@@ -182,10 +182,11 @@ class PointNet(nn.Module):
 
 
 class DGCNN(nn.Module):
-    def __init__(self, args, num_class=10):
+    def __init__(self, args, num_class=10, deepJDOT_head=False):
         super(DGCNN, self).__init__()
         self.args = args
         self.k = K
+        self.deepJDOT_head=False
 
         self.input_transform_net = transform_net(args, 6, 3)
 
@@ -236,6 +237,8 @@ class DGCNN(nn.Module):
         x = x5
 
         logits["cls"], embeddings = self.C(x)
+        if self.deepJDOT_head:
+            logits["DeepJDOT"] = self.DeepJDOT(x)
 
         if activate_DefRec:
             DefRec_input = torch.cat((x_cat, x5.unsqueeze(2).repeat(1, 1, num_points)), dim=1)

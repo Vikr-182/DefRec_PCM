@@ -75,6 +75,7 @@ parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
 parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax')
+parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 
 args = parser.parse_args()
@@ -374,7 +375,11 @@ for epoch in range(args.epochs):
                 wandb.log({"defrec_trgt_loss": loss.item()})
                 loss.backward()
             trgt_count += batch_size
-
+            
+        string_to_be_taken = 'cls'
+        if args.DeepJDOT_head:
+            # separate head for DeepJDOT
+            string_to_be_taken = 'DeepJDOT'  
         if data1 is not None and data2 is not None:
             model.eval()
             gamma = None
@@ -390,7 +395,6 @@ for epoch in range(args.epochs):
                 src_data = src_data_orig.clone()
                 src_cls_logits, src_x = model(src_data, activate_DefRec=False, return_intermediate=True)
 
-
                 trgt_data, trgt_label = data2[0].to(device), data2[1].to(device).squeeze()
                 trgt_data = trgt_data.permute(0, 2, 1)
                 batch_size = trgt_data.size()[0]
@@ -404,9 +408,9 @@ for epoch in range(args.epochs):
                 alpha = 0.6 # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
                 if args.softmax:
-                    C1 = softmax_loss(src_label, trgt_cls_logits['cls'])
+                    C1 = softmax_loss(src_label, trgt_cls_logits[string_to_be_taken])
                 else:
-                    C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10), trgt_cls_logits['cls'], p=2)**2
+                    C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10).type(trgt_cls_logits[string_to_be_taken].dtype), trgt_cls_logits[string_to_be_taken], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
                 C= alpha*C0+C1
