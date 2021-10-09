@@ -67,6 +67,7 @@ parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
+parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 
 args = parser.parse_args()
@@ -96,6 +97,29 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     
     # todo: check function of tloss train_cl, and sloss
     return (torch.sum(gamma * loss) + source_loss)
+
+def softmax_loss(ys, ypred_t):
+    '''
+    classifier loss based on categorical cross entropy in the target domain
+    y_true:  
+    y_pred: pytorch tensor which has gradients
+    
+    0:batch_size - is source samples
+    batch_size:end - is target samples
+    gamma - is the optimal transport plan
+    '''
+    ys_cat = torch.nn.functional.one_hot(ys, num_classes=10).type(ypred_t.dtype)
+    
+    # categorical cross entropy loss
+    # ypred_t = torch.log(ypred_t)
+    ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
+
+    # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
+    loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
+    # returns source loss + target loss
+    
+    # todo: check function of tloss train_cl, and sloss
+    return loss
 
 # L2 distance
 def L2_dist(x,y):
@@ -369,7 +393,11 @@ for epoch in range(args.epochs):
                 # logits output
                 alpha = 0.6 # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
-                C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
+                if args.use_softmax:
+                    C1 = softmax_loss(src_label, trgt_cls_logits['cls'])
+                else:
+                    C1 = torch.cdist(src_label.unsqueeze(-1), trgt_cls_logits['cls'], p=2)**2
+                # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
                 C= alpha*C0+C1
 
