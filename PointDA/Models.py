@@ -234,14 +234,14 @@ class DGCNN(nn.Module):
         x5 = F.adaptive_max_pool1d(x5, 1).view(batch_size, -1)
         x = x5
 
-        logits["cls"] = self.C(x)
+        logits["cls"], embeddings = self.C(x)
 
         if activate_DefRec:
             DefRec_input = torch.cat((x_cat, x5.unsqueeze(2).repeat(1, 1, num_points)), dim=1)
             logits["DefRec"] = self.DefRec(DefRec_input)
 
         if return_intermediate:
-            return logits, x
+            return logits, embeddings
         return logits
 
 
@@ -262,7 +262,7 @@ class classifier(nn.Module):
         x = self.dp1(self.mlp1(x))
         x2 = self.dp2(self.mlp2(x))
         logits = self.mlp3(x2)
-        return logits
+        return logits, x2
 
 
 class RegionReconstruction(nn.Module):
