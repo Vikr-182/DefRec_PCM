@@ -479,8 +479,9 @@ for epoch in range(args.epochs):
     src_acc = io.print_progress("Source", "Trn", epoch, src_print_losses)
     trgt_print_losses = {k: v * 1.0 / trgt_count for (k, v) in trgt_print_losses.items()}
     trgt_acc = io.print_progress("Target", "Trn", epoch, trgt_print_losses)
-    deepjdot_print_losses = {k: v * 1.0 / deepjdot_count for (k, v) in deepjdot_print_losses.items()}
-    deepjdot_acc = io.print_progress("DeepJDOT", "Trn", epoch, deepjdot_print_losses)
+    if args.use_DeepJDOT:
+        deepjdot_print_losses = {k: v * 1.0 / deepjdot_count for (k, v) in deepjdot_print_losses.items()}
+        deepjdot_acc = io.print_progress("DeepJDOT", "Trn", epoch, deepjdot_print_losses)
 
     #===================
     # Validation
