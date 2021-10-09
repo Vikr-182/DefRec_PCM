@@ -237,7 +237,7 @@ class DGCNN(nn.Module):
         x = x5
 
         logits["cls"], embeddings = self.C(x)
-        if self.args.deepJDOT_head:
+        if self.args.DeepJDOT_head:
             logits["DeepJDOT"] = self.DeepJDOT(x)
 
         if activate_DefRec:
