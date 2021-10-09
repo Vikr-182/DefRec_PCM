@@ -1,1 +1,0 @@
-{"pcm_src_loss": 1.1763191223144531, "_runtime": 35, "_timestamp": 1633767916, "_step": 3, "defrec_trgt_loss": 9.530393600463867, "deepJDOT_loss_total": 381.48088782280684, "deepJDOT_align_loss_total": 377.0688772201538, "_wandb": {"runtime": 34}}

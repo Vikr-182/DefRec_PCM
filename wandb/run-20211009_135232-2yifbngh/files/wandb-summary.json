@@ -1,1 +1,0 @@
-{"pcm_src_loss": 0.23028847575187683, "_runtime": 4711, "_timestamp": 1633772463, "_step": 1873, "defrec_trgt_loss": 0.21003477275371552, "src_val_acc": 0.8909038572251008, "src_val_loss": 0.4091774017116292, "trgt_val_acc": 0.44271685761047463, "trgt_val_loss": 2.2164968511184187}
