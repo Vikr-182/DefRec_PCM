@@ -1,0 +1,172 @@
+2021-10-09 13:09:26,648 INFO    MainThread:6014 [internal.py:wandb_internal():89] W&B internal server running at pid: 6014, started at: 2021-10-09 13:09:26.647918
+2021-10-09 13:09:26,650 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: check_version
+2021-10-09 13:09:26,650 INFO    WriterThread:6014 [datastore.py:open_for_write():77] open: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/run-1j37fmc3.wandb
+2021-10-09 13:09:26,652 DEBUG   SenderThread:6014 [sender.py:send():185] send: header
+2021-10-09 13:09:26,652 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: check_version
+2021-10-09 13:09:26,779 DEBUG   SenderThread:6014 [sender.py:send():185] send: run
+2021-10-09 13:09:27,134 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: run_start
+2021-10-09 13:09:27,158 INFO    SenderThread:6014 [dir_watcher.py:__init__():169] watching files in: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files
+2021-10-09 13:09:27,158 INFO    SenderThread:6014 [sender.py:_start_run_threads():749] run started: 1j37fmc3 with start time 1633765165
+2021-10-09 13:09:27,159 DEBUG   SenderThread:6014 [sender.py:send():185] send: summary
+2021-10-09 13:09:27,159 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 13:09:30,373 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_created():217] file/dir created: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json
+2021-10-09 13:09:32,655 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_created():217] file/dir created: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/output.log
+2021-10-09 13:09:36,155 DEBUG   HandlerThread:6014 [meta.py:__init__():40] meta init
+2021-10-09 13:09:36,155 DEBUG   HandlerThread:6014 [meta.py:__init__():54] meta init done
+2021-10-09 13:09:36,155 DEBUG   HandlerThread:6014 [meta.py:probe():211] probe
+2021-10-09 13:09:36,161 DEBUG   HandlerThread:6014 [meta.py:_setup_git():201] setup git
+2021-10-09 13:09:36,183 DEBUG   HandlerThread:6014 [meta.py:_setup_git():208] setup git done
+2021-10-09 13:09:36,184 DEBUG   HandlerThread:6014 [meta.py:_save_pip():58] save pip
+2021-10-09 13:09:36,185 DEBUG   HandlerThread:6014 [meta.py:_save_pip():72] save pip done
+2021-10-09 13:09:36,185 DEBUG   HandlerThread:6014 [meta.py:_save_conda():79] save conda
+2021-10-09 13:09:36,191 ERROR   HandlerThread:6014 [meta.py:_save_conda():86] Error saving conda packages
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/wandb/sdk/internal/meta.py", line 84, in _save_conda
+    subprocess.call(["conda", "env", "export"], stdout=f)
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/subprocess.py", line 339, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'conda': 'conda'
+2021-10-09 13:09:36,194 DEBUG   HandlerThread:6014 [meta.py:_save_conda():87] save conda done
+2021-10-09 13:09:36,194 DEBUG   HandlerThread:6014 [meta.py:probe():249] probe done
+2021-10-09 13:09:36,201 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: stop_status
+2021-10-09 13:09:36,201 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: stop_status
+2021-10-09 13:09:36,554 DEBUG   SenderThread:6014 [sender.py:send():185] send: files
+2021-10-09 13:09:36,554 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-metadata.json with policy now
+2021-10-09 13:09:36,741 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_created():217] file/dir created: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/conda-environment.yaml
+2021-10-09 13:09:36,742 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_created():217] file/dir created: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-metadata.json
+2021-10-09 13:09:36,743 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_created():217] file/dir created: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/requirements.txt
+2021-10-09 13:09:37,430 INFO    Thread-11 :6014 [upload_job.py:push():137] Uploaded file /tmp/tmph5hwhpe5wandb/z23jge95-wandb-metadata.json
+2021-10-09 13:09:40,780 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/output.log
+2021-10-09 13:09:46,748 DEBUG   SenderThread:6014 [sender.py:send():185] send: history
+2021-10-09 13:09:46,749 DEBUG   SenderThread:6014 [sender.py:send():185] send: summary
+2021-10-09 13:09:46,753 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 13:09:46,785 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json
+2021-10-09 13:09:51,555 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: stop_status
+2021-10-09 13:09:51,555 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: stop_status
+2021-10-09 13:09:55,643 DEBUG   SenderThread:6014 [sender.py:send():185] send: history
+2021-10-09 13:09:55,643 DEBUG   SenderThread:6014 [sender.py:send():185] send: summary
+2021-10-09 13:09:55,649 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 13:09:55,793 INFO    Thread-8  :6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json
+2021-10-09 13:10:04,603 DEBUG   SenderThread:6014 [sender.py:send():185] send: stats
+2021-10-09 13:10:06,282 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:06,282 DEBUG   SenderThread:6014 [sender.py:send():185] send: telemetry
+2021-10-09 13:10:06,283 DEBUG   SenderThread:6014 [sender.py:send():185] send: exit
+2021-10-09 13:10:06,283 INFO    SenderThread:6014 [sender.py:send_exit():294] handling exit code: 1
+2021-10-09 13:10:06,283 INFO    SenderThread:6014 [sender.py:send_exit():296] handling runtime: 39
+2021-10-09 13:10:06,285 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 13:10:06,285 INFO    SenderThread:6014 [sender.py:send_exit():306] send defer
+2021-10-09 13:10:06,286 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:06,286 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,286 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 0
+2021-10-09 13:10:06,286 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,286 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 0
+2021-10-09 13:10:06,287 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 1
+2021-10-09 13:10:06,287 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,287 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 1
+2021-10-09 13:10:06,321 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,321 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 1
+2021-10-09 13:10:06,321 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 2
+2021-10-09 13:10:06,322 DEBUG   SenderThread:6014 [sender.py:send():185] send: stats
+2021-10-09 13:10:06,322 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,322 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 2
+2021-10-09 13:10:06,322 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,322 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 2
+2021-10-09 13:10:06,322 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 3
+2021-10-09 13:10:06,323 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,323 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 3
+2021-10-09 13:10:06,323 DEBUG   SenderThread:6014 [sender.py:send():185] send: summary
+2021-10-09 13:10:06,324 INFO    SenderThread:6014 [sender.py:_save_file():879] saving file wandb-summary.json with policy end
+2021-10-09 13:10:06,325 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,325 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 3
+2021-10-09 13:10:06,325 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 4
+2021-10-09 13:10:06,325 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,325 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 4
+2021-10-09 13:10:06,325 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,325 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 4
+2021-10-09 13:10:06,388 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:06,644 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 5
+2021-10-09 13:10:06,644 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:06,645 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,645 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 5
+2021-10-09 13:10:06,645 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,645 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 5
+2021-10-09 13:10:06,645 INFO    SenderThread:6014 [dir_watcher.py:finish():283] shutting down directory watcher
+2021-10-09 13:10:06,746 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:06,796 INFO    SenderThread:6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/output.log
+2021-10-09 13:10:06,796 INFO    SenderThread:6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json
+2021-10-09 13:10:06,796 INFO    SenderThread:6014 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/config.yaml
+2021-10-09 13:10:06,796 INFO    SenderThread:6014 [dir_watcher.py:finish():313] scan: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files
+2021-10-09 13:10:06,797 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json wandb-summary.json
+2021-10-09 13:10:06,797 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/conda-environment.yaml conda-environment.yaml
+2021-10-09 13:10:06,800 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-metadata.json wandb-metadata.json
+2021-10-09 13:10:06,801 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/requirements.txt requirements.txt
+2021-10-09 13:10:06,801 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/config.yaml config.yaml
+2021-10-09 13:10:06,804 INFO    SenderThread:6014 [dir_watcher.py:finish():327] scan save: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/output.log output.log
+2021-10-09 13:10:06,808 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 6
+2021-10-09 13:10:06,808 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:06,812 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:06,812 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 6
+2021-10-09 13:10:06,813 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:06,813 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 6
+2021-10-09 13:10:06,813 INFO    SenderThread:6014 [file_pusher.py:finish():177] shutting down file pusher
+2021-10-09 13:10:06,910 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:06,910 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,011 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,011 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,112 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,112 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,213 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,214 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,314 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,315 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,416 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,416 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,517 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,517 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,618 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,619 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,689 INFO    Thread-12 :6014 [upload_job.py:push():137] Uploaded file /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/wandb-summary.json
+2021-10-09 13:10:07,692 INFO    Thread-14 :6014 [upload_job.py:push():137] Uploaded file /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/config.yaml
+2021-10-09 13:10:07,694 INFO    Thread-15 :6014 [upload_job.py:push():137] Uploaded file /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/output.log
+2021-10-09 13:10:07,720 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,720 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,750 INFO    Thread-13 :6014 [upload_job.py:push():137] Uploaded file /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/files/requirements.txt
+2021-10-09 13:10:07,821 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,821 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,922 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:07,923 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:07,950 INFO    Thread-7  :6014 [sender.py:transition_state():319] send defer: 7
+2021-10-09 13:10:07,950 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:07,951 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 7
+2021-10-09 13:10:07,951 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:07,951 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 7
+2021-10-09 13:10:08,024 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:08,262 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 8
+2021-10-09 13:10:08,262 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:08,263 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:08,263 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 8
+2021-10-09 13:10:08,263 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:08,263 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 8
+2021-10-09 13:10:08,263 INFO    SenderThread:6014 [sender.py:transition_state():319] send defer: 9
+2021-10-09 13:10:08,264 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: defer
+2021-10-09 13:10:08,264 DEBUG   SenderThread:6014 [sender.py:send():185] send: final
+2021-10-09 13:10:08,264 INFO    HandlerThread:6014 [handler.py:handle_request_defer():143] handle defer: 9
+2021-10-09 13:10:08,264 DEBUG   SenderThread:6014 [sender.py:send():185] send: footer
+2021-10-09 13:10:08,265 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: defer
+2021-10-09 13:10:08,265 INFO    SenderThread:6014 [sender.py:send_request_defer():315] handle sender defer: 9
+2021-10-09 13:10:08,364 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: poll_exit
+2021-10-09 13:10:08,364 DEBUG   SenderThread:6014 [sender.py:send_request():199] send_request: poll_exit
+2021-10-09 13:10:08,364 INFO    SenderThread:6014 [file_pusher.py:join():182] waiting for file pusher
+2021-10-09 13:10:09,053 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: get_summary
+2021-10-09 13:10:09,054 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: sampled_history
+2021-10-09 13:10:09,055 DEBUG   HandlerThread:6014 [handler.py:handle_request():126] handle_request: shutdown
+2021-10-09 13:10:09,055 INFO    HandlerThread:6014 [handler.py:finish():683] shutting down handler
+2021-10-09 13:10:09,264 INFO    WriterThread:6014 [datastore.py:close():281] close: /home2/vikrant.dewangan/pcc/DefRec_and_PCM/wandb/run-20211009_130925-1j37fmc3/run-1j37fmc3.wandb
+2021-10-09 13:10:10,052 INFO    SenderThread:6014 [sender.py:finish():986] shutting down sender
+2021-10-09 13:10:10,052 INFO    SenderThread:6014 [file_pusher.py:finish():177] shutting down file pusher
+2021-10-09 13:10:10,053 INFO    SenderThread:6014 [file_pusher.py:join():182] waiting for file pusher
+2021-10-09 13:10:10,055 INFO    MainThread:6014 [internal.py:handle_exit():76] Internal process exited

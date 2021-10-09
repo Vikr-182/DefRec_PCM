@@ -1,0 +1,16 @@
+/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/cuda/__init__.py:52: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at  /opt/conda/conda-bld/pytorch_1623448224956/work/c10/cuda/CUDAFunctions.cpp:115.)
+  return torch._C._cuda_getDeviceCount() > 0
+0it [00:00, ?it/s]
+09-10-21 13:09:32: Namespace(DeepJDOT_head=True, DefRec_dist='volume_based_voxels', DefRec_on_src=False, DefRec_on_trgt=True, DefRec_weight=0.5, alpha=0.6, apply_PCM=True, batch_size=16, dataroot='/scratch/shapenets/pointda', dropout=0.5, epochs=150, exp_name='DefRec_PCM', gpus=[0], lr=0.001, mixup_params=1.0, model='dgcnn', momentum=0.9, num_regions=3, optimizer='ADAM', out_path='./experiments', seed=1, softmax=False, src_dataset='shapenet', supervised=True, test_batch_size=32, trgt_dataset='scannet', wd=5e-05)
+09-10-21 13:09:32: Using CPU
+09-10-21 13:09:32: number of train examples in shapenet: 17378
+09-10-21 13:09:32: Occurrences count of classes in shapenet train set: {0: 599, 1: 167, 2: 310, 3: 1076, 4: 4612, 5: 1620, 6: 762, 7: 158, 8: 2198, 9: 5876}
+09-10-21 13:09:37: number of train examples in scannet: 6110
+09-10-21 13:09:37: Occurrences count of classes in scannet train set: {0: 98, 1: 329, 2: 464, 3: 650, 4: 2578, 5: 161, 6: 210, 7: 88, 8: 495, 9: 1037}
+09-10-21 13:09:38: number of test examples in scannet: 1769
+09-10-21 13:09:38: Occurrences count of classes in scannet test set: {0: 26, 1: 85, 2: 146, 3: 149, 4: 801, 5: 41, 6: 61, 7: 25, 8: 134, 9: 301}
+09-10-21 13:09:38: Occurrences count of classes in source shapenet train part: {0: 480, 1: 134, 2: 248, 3: 860, 4: 3690, 5: 1296, 6: 610, 7: 126, 8: 1758, 9: 4702}
+09-10-21 13:09:38: Occurrences count of classes in source shapenet validation part: {0: 119, 1: 33, 2: 62, 3: 216, 4: 922, 5: 324, 6: 152, 7: 32, 8: 440, 9: 1174}
+09-10-21 13:09:38: Occurrences count of classes in target scannet train part: {0: 80, 1: 270, 2: 388, 3: 517, 4: 2070, 5: 130, 6: 164, 7: 71, 8: 391, 9: 807}
+
+0it [00:24, ?it/s]

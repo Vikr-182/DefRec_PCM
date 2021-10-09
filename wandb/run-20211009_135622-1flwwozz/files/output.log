@@ -1,0 +1,2353 @@
+09-10-21 13:56:29: Namespace(DeepJDOT_head=False, DefRec_dist='volume_based_voxels', DefRec_on_src=False, DefRec_on_trgt=True, DefRec_weight=0.5, alpha=0.6, apply_PCM=True, batch_size=16, dataroot='/scratch/shapenets/pointda', dropout=0.5, epochs=150, exp_name='DefRec_PCM', gpus=[0], lr=0.001, mixup_params=1.0, model='dgcnn', momentum=0.9, num_regions=3, optimizer='ADAM', out_path='./experiments', seed=1, softmax=False, src_dataset='shapenet', supervised=True, test_batch_size=32, trgt_dataset='scannet', use_DeepJDOT=True, wd=5e-05)
+09-10-21 13:56:29: Using GPUs [0], from 1 devices available
+09-10-21 13:56:29: number of train examples in shapenet: 17378
+09-10-21 13:56:29: Occurrences count of classes in shapenet train set: {0: 599, 1: 167, 2: 310, 3: 1076, 4: 4612, 5: 1620, 6: 762, 7: 158, 8: 2198, 9: 5876}
+09-10-21 13:56:34: number of train examples in scannet: 6110
+09-10-21 13:56:34: Occurrences count of classes in scannet train set: {0: 98, 1: 329, 2: 464, 3: 650, 4: 2578, 5: 161, 6: 210, 7: 88, 8: 495, 9: 1037}
+09-10-21 13:56:36: number of test examples in scannet: 1769
+09-10-21 13:56:36: Occurrences count of classes in scannet test set: {0: 26, 1: 85, 2: 146, 3: 149, 4: 801, 5: 41, 6: 61, 7: 25, 8: 134, 9: 301}
+09-10-21 13:56:36: Occurrences count of classes in source shapenet train part: {0: 480, 1: 134, 2: 248, 3: 860, 4: 3690, 5: 1296, 6: 610, 7: 126, 8: 1758, 9: 4702}
+09-10-21 13:56:36: Occurrences count of classes in source shapenet validation part: {0: 119, 1: 33, 2: 62, 3: 216, 4: 922, 5: 324, 6: 152, 7: 32, 8: 440, 9: 1174}
+09-10-21 13:56:36: Occurrences count of classes in target scannet train part: {0: 80, 1: 270, 2: 388, 3: 517, 4: 2070, 5: 130, 6: 164, 7: 71, 8: 391, 9: 807}
+09-10-21 13:56:36: Occurrences count of classes in target scannet validation part: {0: 18, 1: 59, 2: 76, 3: 133, 4: 508, 5: 31, 6: 46, 7: 17, 8: 104, 9: 230}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+305it [07:40,  1.51s/it]
+09-10-21 14:04:28: Trn - Source 0, total loss: 1.0494, mixup loss: 1.0494
+09-10-21 14:04:28: Trn - Target 0, DefRec loss: 2.5233
+09-10-21 14:04:28: Trn - DeepJDOT 0, total loss: 95.7385, cat loss: 4.0679, align loss: 91.6707
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:04:50: Val - Source 0, acc: 0.4108, avg acc: 0.1801, cls loss: 1.8785
+0it [00:00, ?it/s]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+303it [07:36,  1.47s/it]
+09-10-21 14:12:56: Trn - Source 1, total loss: 1.0360, mixup loss: 1.0360
+09-10-21 14:12:56: Trn - Target 1, DefRec loss: 1.4020
+
+
+305it [07:39,  1.51s/it]
+09-10-21 14:13:17: Val - Source 1, acc: 0.4231, avg acc: 0.1729, cls loss: 1.9142
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:13:44: Val - Target 1, acc: 0.2259, avg acc: 0.1078, cls loss: 2.2145
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+303it [07:37,  1.49s/it]
+09-10-21 14:21:24: Trn - Source 2, total loss: 0.9692, mixup loss: 0.9692
+09-10-21 14:21:24: Trn - Target 2, DefRec loss: 1.1157
+
+305it [07:40,  1.51s/it]
+09-10-21 14:21:46: Val - Source 2, acc: 0.3984, avg acc: 0.1642, cls loss: 1.7887
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:22:12: Val - Target 2, acc: 0.1792, avg acc: 0.1014, cls loss: 2.2389
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+304it [07:39,  1.51s/it]
+09-10-21 14:29:53: Trn - Source 3, total loss: 0.9313, mixup loss: 0.9313
+09-10-21 14:29:53: Trn - Target 3, DefRec loss: 0.8786
+
+305it [07:40,  1.51s/it]
+09-10-21 14:30:15: Val - Source 3, acc: 0.3676, avg acc: 0.1318, cls loss: 1.7809
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:30:41: Val - Target 3, acc: 0.1899, avg acc: 0.1015, cls loss: 2.0562
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+304it [07:37,  1.50s/it]
+09-10-21 14:38:20: Trn - Source 4, total loss: 0.9143, mixup loss: 0.9143
+09-10-21 14:38:20: Trn - Target 4, DefRec loss: 0.6954
+
+305it [07:38,  1.50s/it]
+09-10-21 14:38:42: Val - Source 4, acc: 0.3828, avg acc: 0.1471, cls loss: 1.7126
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:39:08: Val - Target 4, acc: 0.1882, avg acc: 0.0995, cls loss: 2.0945
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+304it [07:36,  1.52s/it]
+09-10-21 14:46:47: Trn - Source 5, total loss: 0.9044, mixup loss: 0.9044
+09-10-21 14:46:47: Trn - Target 5, DefRec loss: 0.6227
+
+305it [07:38,  1.50s/it]
+09-10-21 14:47:08: Val - Source 5, acc: 0.3877, avg acc: 0.1463, cls loss: 1.6833
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:47:35: Val - Target 5, acc: 0.2300, avg acc: 0.1097, cls loss: 1.9847
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+304it [07:38,  1.50s/it]
+09-10-21 14:55:15: Trn - Source 6, total loss: 0.8829, mixup loss: 0.8829
+09-10-21 14:55:15: Trn - Target 6, DefRec loss: 0.5326
+
+305it [07:40,  1.51s/it]
+09-10-21 14:55:36: Val - Source 6, acc: 0.3955, avg acc: 0.1476, cls loss: 1.6603
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 14:56:03: Val - Target 6, acc: 0.2398, avg acc: 0.1076, cls loss: 1.9664
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+304it [07:36,  1.47s/it]
+09-10-21 15:03:42: Trn - Source 7, total loss: 0.8635, mixup loss: 0.8635
+09-10-21 15:03:42: Trn - Target 7, DefRec loss: 0.5266
+
+305it [07:38,  1.50s/it]
+09-10-21 15:04:03: Val - Source 7, acc: 0.4444, avg acc: 0.1794, cls loss: 1.5063
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x14d183553830>
+Traceback (most recent call last):
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1328, in __del__
+    self._shutdown_workers()
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1320, in _shutdown_workers
+    if w.is_alive():
+  File "/home2/vikrant.dewangan/anaconda3/envs/forecasting/lib/python3.7/multiprocessing/process.py", line 151, in is_alive
+    assert self._parent_pid == os.getpid(), 'can only test a child process'
+AssertionError: can only test a child process
+09-10-21 15:04:30: Val - Target 7, acc: 0.3101, avg acc: 0.1319, cls loss: 2.1559
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
