@@ -315,8 +315,10 @@ for epoch in range(args.epochs):
     src_count = trgt_count = deepjdot_count =  0.0
 
     batch_idx = 1
+    cnt = 0
     for data1, data2 in tqdm.tqdm(zip(src_train_loader, trgt_train_loader)): #total=len(src_trainset.train_ind) // args.batch_size
         opt.zero_grad()
+        cnt = cnt + 1
 
         #### source data ####
         if data1 is not None:
@@ -334,6 +336,8 @@ for epoch in range(args.epochs):
                 loss = DefRec.calc_loss(args, src_logits, src_data_orig, src_mask)
                 src_print_losses['DefRec'] += loss.item() * batch_size
                 src_print_losses['total'] += loss.item() * batch_size
+                if cnt % 50 == 0: 
+                    wandb.log({"defrec_ssl_src_loss": loss.item()})
                 loss.backward()
 
             # supervised
@@ -345,7 +349,8 @@ for epoch in range(args.epochs):
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
-                    wandb.log({"pcm_src_loss": loss.item()})
+                    if cnt % 50 == 0:
+                        wandb.log({"pcm_src_loss": loss.item()})
                     loss.backward()
 
                 else:
@@ -355,7 +360,8 @@ for epoch in range(args.epochs):
                     loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
                     src_print_losses['cls'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
-                    wandb.log({"defrec_src_loss": loss.item()})
+                    if cnt % 50 == 0:                    
+                        wandb.log({"defrec_src_loss": loss.item()})
                     loss.backward()
 
             src_count += batch_size
@@ -373,7 +379,8 @@ for epoch in range(args.epochs):
                 trgt_logits = model(trgt_data, activate_DefRec=True)
                 loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
                 trgt_print_losses['DefRec'] += loss.item() * batch_size
-                wandb.log({"defrec_trgt_loss": loss.item()})
+                if cnt % 50 == 0:                
+                    wandb.log({"defrec_trgt_loss": loss.item()})
                 loss.backward()
             trgt_count += batch_size
             
@@ -454,7 +461,10 @@ for epoch in range(args.epochs):
             deepjdot_print_losses['align'] += align_loss_batch.item() * batch_size
             deepjdot_print_losses['cat'] += cat_loss.item() * batch_size
             deepjdot_print_losses['total'] += loss.item() * batch_size
-            wandb.log({"deepJDOT_loss": loss.item()})
+            if cnt % 50 == 0:            
+                wandb.log({"deepJDOT_loss_total": loss.item()})
+                wandb.log({"deepJDOT_align_loss_total": align_loss_batch.item()})
+                wandb.log({"deepJDOT_cat_loss_total": cat_loss_batch.item()})
             loss.backward()
             deepjdot_count += batch_size
 
@@ -476,6 +486,11 @@ for epoch in range(args.epochs):
     #===================
     src_val_acc, src_val_loss, src_conf_mat = test(src_val_loader, model, "Source", "Val", epoch)
     trgt_val_acc, trgt_val_loss, trgt_conf_mat = test(trgt_val_loader, model, "Target", "Val", epoch)
+
+    wandb.log({"src_val_acc": src_val_acc})
+    wandb.log({"src_val_loss": src_val_loss})
+    wandb.log({"trgt_val_acc": trgt_val_acc})
+    wandb.log({"trgt_val_loss": trgt_val_loss})
 
     # save model according to best source model (since we don't have target labels)
     if src_val_acc > src_best_val_acc:
