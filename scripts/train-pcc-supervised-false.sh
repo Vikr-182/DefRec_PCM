@@ -2,7 +2,7 @@
 #SBATCH --job-name=supf-train-pcc
 #SBATCH --time=1-72:00:00
 #SBATCH --mincpus=5
-#SBATCH --output supf-pcc.log
+#SBATCH --output ffsupf-pcc.log
 #SBATCH -G 1 -c 10
 #SBATCH --mail-type=ALL --mail-user=vikrant.dewangan@research.iiit.ac.in
 
@@ -34,5 +34,5 @@ cd ~/pcc/DefRec_and_PCM
 #parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 #parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 #parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
-python3 PointDA/trainer.py --dataroot /scratch/shapenets/pointda --batch_size 16 --supervised False --softmax True
+python3 PointDA/trainer.py --dataroot /scratch/shapenets/pointda --batch_size 16 --supervised False --softmax True --DefRec_on_trgt False  --DefRec_on_src False
 echo "Done Training"
