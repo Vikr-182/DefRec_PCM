@@ -2,8 +2,8 @@ project: pcc
 program: ./trainer.py 
 method: bayes
 metric:
-  name: trgt_val_acc
-  goal: maximize
+  name: src_val_loss
+  goal: minimize
 command:
   - ${env}
   - ${interpreter}
