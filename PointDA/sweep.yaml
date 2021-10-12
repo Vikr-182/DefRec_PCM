@@ -1,0 +1,48 @@
+project: pcc
+program: ./trainer.py 
+method: bayes
+metric:
+  name: trgt_val_acc
+  goal: maximize
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - "--dataroot /scratch/shapenets/pointda"
+  - "--batch_size 16"
+  - "--epochs 75"
+  - ${args}
+parameters:
+  lr:
+    distribution: log_normal
+    min: -11.512925465
+    max: -4.60517018599
+  optimizer:
+    distribution: categorical
+    values:
+      - SGD
+      - ADAM
+  softmax:
+    distribution: categorical
+    values:
+      - True
+      - False
+  jdot_alpha:
+    distribution: uniform
+    min: 0.005
+    max: 2.0
+  jdot_sloss:
+    distribution: uniform
+    min: 0.0
+    max: 1.0
+  jdot_tloss:
+    distribution: uniform
+    min: 0.1
+    max: 2.0
+  jdot_train_cl:
+    distribution: uniform
+    min: 0.1
+    max: 2.0
+  
+
+

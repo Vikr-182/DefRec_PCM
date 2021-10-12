@@ -18,12 +18,8 @@ from utils import pc_utils
 from DefRec_and_PCM import DefRec, PCM
 
 import tqdm.auto as tqdm
-
-
 import wandb
 
-# 1. Start a new run
-wandb.init(project='pcc', entity='vikr-182')   
 
 NWORKERS=4
 MAX_LOSS = 9 * (10**9)
@@ -71,7 +67,6 @@ parser.add_argument('--DefRec_weight', type=float, default=0.5, help='weight of 
 parser.add_argument('--mixup_params', type=float, default=1.0, help='a,b in beta distribution')
 parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
-parser.add_argument('--alpha', type=float, default=0.6, help='Alpha')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
@@ -80,8 +75,30 @@ parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use Dee
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
+parser.add_argument('--jdot_alpha', type=float, default=0.01, help='JDOT Alpha')
+parser.add_argument('--jdot_sloss', type=float, default=0.0, help='JDOT Weight for Source Classification')
+parser.add_argument('--jdot_tloss', type=float, default=1.0, help='JDOT Weight for Target Classification')
+parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train CL')
 
 args = parser.parse_args()
+
+
+# 1. Start a new run
+wandb.init(project='pcc', entity='vikr-182')   
+
+# config = {
+#     'lr': args.lr,
+#     'optimizer': args.optimizer,
+#     'softmax': args.softmax,
+#     'jdot_alpha': args.jdot_alpha,
+#     'jdot_sloss': args.jdot_sloss,
+#     'jdot_tloss': args.jdot_tloss,
+#     'jdot_train_cl': args.jdot_train_cl
+# }
+
+# # Maybe this line has to be commented if not running a sweep
+# config = wandb.config
+
 
 def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     '''
@@ -107,7 +124,7 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     # returns source loss + target loss
     
     # todo: check function of tloss train_cl, and sloss
-    return (torch.sum(gamma * loss) + source_loss)
+    return arg.jdot_train_cl * (args.jdot_tloss * torch.sum(gamma * loss) + args.jdot_sloss * source_loss)
 
 def softmax_loss(ys, ypred_t):
     '''
@@ -127,9 +144,7 @@ def softmax_loss(ys, ypred_t):
 
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
     loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
-    # returns source loss + target loss
-    
-    # todo: check function of tloss train_cl, and sloss
+
     return loss
 
 # L2 distance
@@ -158,7 +173,7 @@ def align_loss(g_source, g_target, gamma):
     # target domain features
     #gt = y_pred[batch_size:,:]
     gdist = L2_dist(g_source,g_target)  
-    return torch.sum(gamma * (gdist))
+    return args.jdot_alpha * torch.sum(gamma * (gdist))
 
 # ==================
 # init
@@ -421,7 +436,6 @@ for epoch in range(args.epochs):
                 trgt_cls_logits, trgt_x = model(trgt_data, activate_DefRec=False, return_intermediate=True)
 
                 # logits output
-                alpha = args.alpha # Will have to check use later.
                 C0 = torch.cdist(src_x, trgt_x, p=2.0)**2
                 if args.softmax:
                     C1 = softmax_loss(src_label, trgt_cls_logits[string_to_be_taken])
@@ -429,7 +443,7 @@ for epoch in range(args.epochs):
                     C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10).type(trgt_cls_logits[string_to_be_taken].dtype), trgt_cls_logits[string_to_be_taken], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
-                C= alpha*C0+C1
+                C= args.jdot_alpha*C0+C1
 
                 # JDOT optimal coupling (gamma)
                 gamma=ot.emd(ot.unif(src_x.cpu().shape[0]),
