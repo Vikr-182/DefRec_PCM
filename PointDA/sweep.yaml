@@ -14,7 +14,7 @@ command:
   - ${args}
 parameters:
   lr:
-    distribution: log_normal
+    distribution: log_uniform
     min: -11.512925465
     max: -4.60517018599
   optimizer:
