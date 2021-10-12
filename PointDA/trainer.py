@@ -124,7 +124,7 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     # returns source loss + target loss
     
     # todo: check function of tloss train_cl, and sloss
-    return arg.jdot_train_cl * (args.jdot_tloss * torch.sum(gamma * loss) + args.jdot_sloss * source_loss)
+    return args.jdot_train_cl * (args.jdot_tloss * torch.sum(gamma * loss) + args.jdot_sloss * source_loss)
 
 def softmax_loss(ys, ypred_t):
     '''
