@@ -1,5 +1,5 @@
 project: pcc
-program: ./trainer.py 
+program: PointDA/trainer.py 
 method: bayes
 metric:
   name: src_val_loss
@@ -8,11 +8,17 @@ command:
   - ${env}
   - ${interpreter}
   - ${program}
-  - "--dataroot /scratch/shapenets/pointda"
-  - "--batch_size 16"
-  - "--epochs 75"
   - ${args}
 parameters:
+  dataroot:
+    distribution: constant
+    value: /scratch/shapenets/pointda
+  batch_size:
+    distribution: constant
+    value: 16
+  epochs:
+    distribution: constant
+    value: 75
   lr:
     distribution: log_uniform
     min: -11.512925465
