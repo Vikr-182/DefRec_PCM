@@ -10,7 +10,7 @@ import sklearn.metrics as metrics
 import argparse
 import ot
 import copy
-import utils
+import utils.log
 import wandb
 from PointDA.data.dataloader import ScanNet, ModelNet, ShapeNet, label_to_idx
 from PointDA.Models import PointNet, DGCNN
