@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-K = 20
+K = 7
 
 def knn(x, k):
     inner = -2*torch.matmul(x.transpose(2, 1), x)
