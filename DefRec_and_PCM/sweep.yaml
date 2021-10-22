@@ -1,4 +1,3 @@
-project: pcc
 program: PointDA/trainer.py 
 method: bayes
 metric:
@@ -11,13 +10,10 @@ command:
   - ${args}
 parameters:
   dataroot:
-    distribution: constant
     value: /scratch/shapenets/pointda
   batch_size:
-    distribution: constant
     value: 16
   epochs:
-    distribution: constant
     value: 75
   lr:
     distribution: log_uniform
