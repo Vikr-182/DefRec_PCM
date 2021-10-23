@@ -250,7 +250,7 @@ class DGCNN(nn.Module):
             logits["DefRec"] = self.DefRec(DefRec_input)
 
         if return_intermediate:
-            return logits, torch.nn.functional.softmax(x,-1)
+            return logits, x #torch.nn.functional.softmax(x,-1)
         return logits
 
 

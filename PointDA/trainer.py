@@ -117,8 +117,8 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     ys_cat = torch.nn.functional.one_hot(ys, num_classes=10).type(ypred_t.dtype) 
     
     # categorical cross entropy loss
-    ypred_t = torch.log(ypred_t)
-    #ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
+    #ypred_t = torch.log(ypred_t)
+    ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
 
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
     loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
@@ -490,7 +490,7 @@ for epoch in range(args.epochs):
                 wandb.log({"deepJDOT_loss_total": loss.item()})
                 wandb.log({"deepJDOT_align_loss_total": align_loss_batch.item()})
                 wandb.log({"deepJDOT_cat_loss_total": cat_loss.item()})
-            loss.backward()
+            #loss.backward()
             deepjdot_count += batch_size
 
         opt.step()
