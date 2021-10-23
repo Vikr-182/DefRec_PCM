@@ -45,5 +45,5 @@ cd ~/pcc/DefRec_and_PCM
 #parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 #parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
 
-python3 PointDA/trainer.py --batch_size=16 --dataroot=/scratch/shapenets/pointda --epochs=75 --optimizer=ADAM --softmax=False
+python3 PointDA/trainer.py --batch_size=20 --dataroot=/scratch/shapenets/pointda --epochs=75 --optimizer=ADAM --softmax=False  --apply_PCM=True --supervised=False --DefRec_on_trgt=False
 echo "Done Training"

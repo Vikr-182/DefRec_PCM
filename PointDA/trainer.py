@@ -65,7 +65,7 @@ parser.add_argument('--test_batch_size', type=int, default=32, metavar='batch_si
 parser.add_argument('--optimizer', type=str, default='ADAM', choices=['ADAM', 'SGD'])
 parser.add_argument('--DefRec_weight', type=float, default=0.5, help='weight of the DefRec loss')
 parser.add_argument('--mixup_params', type=float, default=1.0, help='a,b in beta distribution')
-parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
+parser.add_argument('--lr', type=float, default=2e-4, help='learning rate')
 parser.add_argument('--momentum', type=float, default=0.9, help='SGD momentum')
 parser.add_argument('--wd', type=float, default=5e-5, help='weight decay')
 parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
@@ -75,11 +75,10 @@ parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use Dee
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
-parser.add_argument('--jdot_alpha', type=float, default=0.01, help='JDOT Alpha')
-parser.add_argument('--jdot_lambda', type=float, default=0.0001, help='JDOT Lambda')
-parser.add_argument('--jdot_sloss', type=float, default=0.0, help='JDOT Weight for Source Classification')
-parser.add_argument('--jdot_tloss', type=float, default=1.0, help='JDOT Weight for Target Classification')
-parser.add_argument('--jdot_train_cl', type=float, default=0.01, help='JDOT Train CL')
+parser.add_argument('--jdot_alpha', type=float, default=0.001, help='JDOT Alpha')
+parser.add_argument('--jdot_sloss', type=float, default=1.0, help='JDOT Weight for Source Classification')
+parser.add_argument('--jdot_tloss', type=float, default=0.0001, help='JDOT Weight for Target Classification')
+parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train CL')
 
 args = parser.parse_args()
 
@@ -370,8 +369,8 @@ for epoch in range(args.epochs):
                     src_data = src_data_orig.clone()
                     src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
                     src_cls_logits = model(src_data, activate_DefRec=False)
-                    print(src_cls_logits)
-                    print(src_cls_logits['cls'].shape, 'cls')
+                    #print(src_cls_logits)
+                    #print(src_cls_logits['cls'].shape, 'cls')
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
@@ -446,7 +445,7 @@ for epoch in range(args.epochs):
                     C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10).type(trgt_cls_logits[string_to_be_taken].dtype), trgt_cls_logits[string_to_be_taken], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
-                C= args.jdot_alpha*C0+args.jdot_lambda*C1
+                C= args.jdot_alpha*C0+args.jdot_tloss*C1
 
                 # JDOT optimal coupling (gamma)
                 gamma=ot.emd(ot.unif(src_x.cpu().shape[0]),
@@ -490,7 +489,7 @@ for epoch in range(args.epochs):
                 wandb.log({"deepJDOT_loss_total": loss.item()})
                 wandb.log({"deepJDOT_align_loss_total": align_loss_batch.item()})
                 wandb.log({"deepJDOT_cat_loss_total": cat_loss.item()})
-            #loss.backward()
+            loss.backward()
             deepjdot_count += batch_size
 
         opt.step()
