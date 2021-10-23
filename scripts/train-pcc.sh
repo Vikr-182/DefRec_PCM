@@ -1,9 +1,9 @@
 #!/bin/zsh
-#SBATCH --job-name=train-pcc
+#SBATCH --job-name=x-pcc
 #SBATCH --time=1-72:00:00
-#SBATCH --mincpus=35
-#SBATCH --output pcc.log
-#SBATCH -G 4 -c 35
+#SBATCH --mincpus=6
+#SBATCH --output _pcc.log
+#SBATCH -G 1 -c 8
 #SBATCH --mail-type=ALL --mail-user=vikrant.dewangan@research.iiit.ac.in
 
 #module load cuda/11.0
@@ -45,5 +45,5 @@ cd ~/pcc/DefRec_and_PCM
 #parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 #parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
 
-python3 PointDA/trainer.py --batch_size=64 --dataroot=/scratch/shapenets/pointda --epochs=75 --optimizer=ADAM --softmax=False --gpus=0,1,2,3 --src_dataset=shapenet --trgt_dataset=modelnet 
+python3 PointDA/trainer.py --batch_size=16 --dataroot=/scratch/shapenets/pointda --epochs=75 --optimizer=ADAM --softmax=False
 echo "Done Training"

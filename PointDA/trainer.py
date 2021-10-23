@@ -76,9 +76,10 @@ parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Anoth
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
 parser.add_argument('--jdot_alpha', type=float, default=0.01, help='JDOT Alpha')
+parser.add_argument('--jdot_lambda', type=float, default=0.0001, help='JDOT Lambda')
 parser.add_argument('--jdot_sloss', type=float, default=0.0, help='JDOT Weight for Source Classification')
 parser.add_argument('--jdot_tloss', type=float, default=1.0, help='JDOT Weight for Target Classification')
-parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train CL')
+parser.add_argument('--jdot_train_cl', type=float, default=0.01, help='JDOT Train CL')
 
 args = parser.parse_args()
 
@@ -116,8 +117,8 @@ def classifier_cat_loss(source_ypred, ypred_t, ys, gamma):
     ys_cat = torch.nn.functional.one_hot(ys, num_classes=10).type(ypred_t.dtype) 
     
     # categorical cross entropy loss
-    # ypred_t = torch.log(ypred_t)
-    ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
+    ypred_t = torch.log(ypred_t)
+    #ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
 
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
     loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
@@ -139,8 +140,8 @@ def softmax_loss(ys, ypred_t):
     ys_cat = torch.nn.functional.one_hot(ys, num_classes=10).type(ypred_t.dtype)
     
     # categorical cross entropy loss
-    # ypred_t = torch.log(ypred_t)
-    ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
+    ypred_t = torch.log(ypred_t)
+    #ypred_t = torch.nn.functional.log_softmax(ypred_t, dim=-1)
 
     # loss calculation based on double sum (sum_ij (ys^i, ypred_t^j))
     loss = -torch.matmul(ys_cat, torch.transpose(ypred_t,1,0))
@@ -369,6 +370,8 @@ for epoch in range(args.epochs):
                     src_data = src_data_orig.clone()
                     src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
                     src_cls_logits = model(src_data, activate_DefRec=False)
+                    print(src_cls_logits)
+                    print(src_cls_logits['cls'].shape, 'cls')
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
                     src_print_losses['total'] += loss.item() * batch_size
@@ -443,7 +446,7 @@ for epoch in range(args.epochs):
                     C1 = torch.cdist(torch.nn.functional.one_hot(src_label, num_classes=10).type(trgt_cls_logits[string_to_be_taken].dtype), trgt_cls_logits[string_to_be_taken], p=2)**2
                 # C1 = torch.cdist(src_cls_logits['cls'], trgt_cls_logits['cls'], p=2)**2
                 # JDOT ground metric
-                C= args.jdot_alpha*C0+C1
+                C= args.jdot_alpha*C0+args.jdot_lambda*C1
 
                 # JDOT optimal coupling (gamma)
                 gamma=ot.emd(ot.unif(src_x.cpu().shape[0]),

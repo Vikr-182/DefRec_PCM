@@ -33,6 +33,6 @@ cd /scratch/shapenets/pointda
 unzip PointDA_data.zip
 
 cd ~/pcc/DefRec_and_PCM/
-wandb agent -p pcc_sweep -e pcc-team --count 1 rz21p67j
+wandb agent -p pcc_sweep -e pcc-team --count 2 hcru80eq
 
 echo "Done Training"
