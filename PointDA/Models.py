@@ -146,7 +146,7 @@ class PointNet(nn.Module):
         self.C = classifier(args, num_class)
         self.DefRec = RegionReconstruction(args, num_f_prev + 1024)
 
-    def forward(self, x, activate_DefRec=False):
+    def forward(self, x, activate_DefRec=False, return_intermediate=False):
         num_points = x.size(2)
         x = torch.unsqueeze(x, dim=3)
 
@@ -174,12 +174,17 @@ class PointNet(nn.Module):
         x5, _ = torch.max(x, dim=2, keepdim=False)
         x = x5.squeeze(dim=2)  # batchsize*1024
 
-        logits["cls"] = self.C(x)
 
+        logits["cls"], embeddings = self.C(x)
         if activate_DefRec:
             DefRec_input = torch.cat((x_cat.squeeze(dim=3), x5.repeat(1, 1, num_points)), dim=1)
             logits["DefRec"] = self.DefRec(DefRec_input)
 
+        if self.args.DeepJDOT_head:
+            logits["DeepJDOT"], embeddings = self.DeepJDOT(x)
+
+        if return_intermediate:
+            return logits, torch.nn.functional.softmax(embeddings,-1)
         return logits
 
 
@@ -240,7 +245,7 @@ class DGCNN(nn.Module):
 
         # Per feature take the point that have the highest (absolute) value.
         # Generate a feature vector for the whole shape
-        x5 = F.adaptive_max_pool1d(x5, 1).view(batch_size, -1)
+        x5 = F.adaptive_avg_pool1d(x5, 1).view(batch_size, -1)
         x = x5
 
         logits["cls"] = self.C(x)
@@ -252,7 +257,7 @@ class DGCNN(nn.Module):
             logits["DefRec"] = self.DefRec(DefRec_input)
 
         if return_intermediate:
-            return logits, x5
+            return logits, x #torch.nn.functional.softmax(x,-1)
         return logits
 
 

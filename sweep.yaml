@@ -30,6 +30,10 @@ parameters:
     max: -4.60517018599
   optimizer:
     value: ADAM
+    distribution: categorical
+    values:
+      - SGD
+      - ADAM
   softmax:
     distribution: categorical
     values:
@@ -56,5 +60,3 @@ parameters:
     values:
       - True
       - False
-
-
