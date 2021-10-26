@@ -5,7 +5,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.utils.data import DataLoader
+import sklearn.metrics as metrics
 import argparse
+import ot
 import copy
 import utils.log
 from torchsummary import summary
@@ -15,6 +17,10 @@ from utils import pc_utils
 from sklearn.metrics import jaccard_score
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 from DefRec_and_PCM import DefRec, PCM
+
+import tqdm.auto as tqdm
+import wandb
+
 
 NWORKERS=4
 MAX_LOSS = 9 * (10**9)
@@ -58,6 +64,7 @@ parser.add_argument('--dropout', type=float, default=0.5, help='dropout rate')
 parser.add_argument('--DefRec_dist', type=str, default='volume_based_radius', metavar='N',
                     choices=['volume_based_voxels', 'volume_based_radius'],
                     help='distortion of points')
+parser.add_argument('--DefRec_on_src', type=str2bool, default=False, help='Using DefRec in source')
 parser.add_argument('--radius', type=float, default=0.3, help='radius of the ball for reconstruction')
 parser.add_argument('--min_pts', type=int, default=20, help='minimum number of points per region')
 parser.add_argument('--num_regions', type=int, default=3, help='number of regions to split shape by')
@@ -66,7 +73,30 @@ parser.add_argument('--apply_PCM', type=str2bool, default=True, help='Using mixu
 parser.add_argument('--DefRec_weight', type=float, default=0.05, help='weight of the DefRec loss')
 parser.add_argument('--mixup_params', type=float, default=1.0, help='a,b in beta distribution')
 
+
+
+parser.add_argument('--supervised', type=str2bool, default=True, help='run supervised')
+parser.add_argument('--softmax', type=str2bool, default=False, help='use softmax')
+
+
+parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use DeepJDOT')
+parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
+parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
+parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
+
+
+
+parser.add_argument('--jdot_alpha', type=float, default=0.001, help='JDOT Alpha')
+parser.add_argument('--jdot_sloss', type=float, default=1.0, help='JDOT Weight for Source Classification')
+parser.add_argument('--jdot_tloss', type=float, default=0.0001, help='JDOT Weight for Target Classification')
+parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train CL')
+
+
+
 args = parser.parse_args()
+
+# wandb.init(project='pcc', entity='vikr-182')
+
 # ==================
 # init
 # ==================

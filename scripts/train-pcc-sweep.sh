@@ -4,6 +4,7 @@
 #SBATCH --mincpus=5
 #SBATCH -G 1 -c 10
 #SBATCH --mail-type=ALL --mail-user=vikrant.dewangan@research.iiit.ac.in
+#SBATCH -w gnode58
 
 #module load cuda/11.0
 #module load cudnn/7-cuda-11.0
@@ -32,6 +33,6 @@ cd /scratch/shapenets/pointda
 unzip PointDA_data.zip
 
 cd ~/pcc/DefRec_and_PCM/
-wandb agent -p pcc_sweep -e pcc-team --count 1 <wandb sweep id>
+wandb agent -p pcc_sweep -e pcc-team --count 2 hcru80eq
 
 echo "Done Training"
