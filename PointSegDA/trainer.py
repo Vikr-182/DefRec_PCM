@@ -95,7 +95,7 @@ parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train
 
 args = parser.parse_args()
 
-# wandb.init(project='pcc', entity='vikr-182')
+wandb.init(project='pcc-seg', entity='vikr-182')
 
 # ==================
 # init
@@ -314,16 +314,32 @@ for epoch in range(args.epochs):
         best_val_epoch = epoch
         best_model = copy.deepcopy(model)
 
+
+    wandb.log({"Target train rec loss": trgt_rec_loss.item()})
+    wandb.log({"Source train seg loss": src_seg_loss.item()})
+    wandb.log({"Source train seg mIOU": src_mIOU.item()})
+    wandb.log({"Source train seg accuracy": src_accuracy.item()})
+    
     io.cprint(f"Epoch: {epoch}, "
               f"Target train rec loss: {trgt_rec_loss:.5f}, "
               f"Source train seg loss: {src_seg_loss:.5f}, "
               f"Source train seg mIOU: {src_mIOU:.5f}, "
               f"Source train seg accuracy: {src_accuracy:.5f}")
 
+
+    wandb.log({"Source val seg loss": src_val_loss})
+    wandb.log({"Source val seg mIOU": src_val_miou})
+    wandb.log({"Source val seg accuracy": src_val_acc})
+    
+
     io.cprint(f"Epoch: {epoch}, "
               f"Source val seg loss: {src_val_loss:.5f}, "
               f"Source val seg mIOU: {src_val_miou:.5f}, "
               f"Source val seg accuracy: {src_val_acc:.5f}")
+
+    wandb.log({"Target val seg loss": trgt_val_loss})
+    wandb.log({"Target val seg mIOU": trgt_val_miou})
+    wandb.log({"Target val seg accuracy": trgt_val_acc})
 
     io.cprint(f"Epoch: {epoch}, "
               f"Target val seg loss: {trgt_val_loss:.5f}, "
