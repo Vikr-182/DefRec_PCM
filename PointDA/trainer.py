@@ -17,6 +17,8 @@ from PointDA.Models import PointNet, DGCNN
 from utils import pc_utils
 from DefRec_and_PCM import DefRec, PCM
 
+from PointDA.Samplers import BalancedSubsetBatchSampler
+
 import tqdm.auto as tqdm
 import wandb
 
@@ -79,12 +81,14 @@ parser.add_argument('--jdot_alpha', type=float, default=0.001, help='JDOT Alpha'
 parser.add_argument('--jdot_sloss', type=float, default=1.0, help='JDOT Weight for Source Classification')
 parser.add_argument('--jdot_tloss', type=float, default=0.0001, help='JDOT Weight for Target Classification')
 parser.add_argument('--jdot_train_cl', type=float, default=1.0, help='JDOT Train CL')
-
+parser.add_argument('--jdot_train_algn', type=float, default=1.0, help='JDOT Train CL')
+parser.add_argument('--use_sigmoid', type=str2bool, default=True, help='Use SIGMOID for the embedding layer of DeepJDOT')
+parser.add_argument('--balance_dataset', type=str2bool, default=False, help='Balance Dataset to have equal number from each class')
 args = parser.parse_args()
 
 
 # 1. Start a new run
-wandb.init(project='pcc', entity='vikr-182')   
+wandb.init(project='pcc-ablations', entity='pcc-team')   
 
 # config = {
 #     'lr': args.lr,
@@ -173,7 +177,7 @@ def align_loss(g_source, g_target, gamma):
     # target domain features
     #gt = y_pred[batch_size:,:]
     gdist = L2_dist(g_source,g_target)  
-    return args.jdot_alpha * torch.sum(gamma * (gdist))
+    return args.jdot_train_algn * args.jdot_alpha * torch.sum(gamma * (gdist))
 
 # ==================
 # init
@@ -218,7 +222,12 @@ def split_set(dataset, domain, set_type="source"):
     io.cprint("Occurrences count of classes in " + set_type + " " + domain +
               " validation part: " + str(dict(zip(unique, counts))))
     # Creating PT data samplers and loaders:
-    train_sampler = SubsetRandomSampler(train_indices)
+    # train_sampler = SubsetRandomSampler(train_indices)
+    if args.balance_dataset and set_type == 'source':
+        print("Using balanced batches")
+        train_sampler = BalancedSubsetBatchSampler(dataset=dataset, n_classes=10, n_samples=args.batch_size // 10, indices=train_indices)
+    else:
+        train_sampler = SubsetRandomSampler(train_indices)
     valid_sampler = SubsetRandomSampler(val_indices)
     return train_sampler, valid_sampler
 
@@ -235,8 +244,13 @@ src_train_sampler, src_valid_sampler = split_set(src_trainset, src_dataset, "sou
 trgt_train_sampler, trgt_valid_sampler = split_set(trgt_trainset, trgt_dataset, "target")
 
 # dataloaders for source and target
-src_train_loader = DataLoader(src_trainset, num_workers=NWORKERS, batch_size=args.batch_size,
-                               sampler=src_train_sampler, drop_last=True)
+if args.balance_dataset:
+    src_train_loader = DataLoader(src_trainset, num_workers=NWORKERS,
+                                batch_sampler=src_train_sampler)
+else:
+    src_train_loader = DataLoader(src_trainset, num_workers=NWORKERS, batch_size=args.batch_size,
+                                sampler=src_train_sampler, drop_last=True)
+    
 src_val_loader = DataLoader(src_trainset, num_workers=NWORKERS, batch_size=args.test_batch_size,
                              sampler=src_valid_sampler)
 trgt_train_loader = DataLoader(trgt_trainset, num_workers=NWORKERS, batch_size=args.batch_size,
@@ -453,6 +467,7 @@ for epoch in range(args.epochs):
                 
                 # update the computed gamma                      
                 gamma = torch.as_tensor(gamma, device=src_x.device)
+                #print(gamma.shape)
 
                 
             model.train()
@@ -541,3 +556,5 @@ trgt_test_acc, trgt_test_loss, trgt_conf_mat = test(trgt_test_loader, model, "Ta
 io.cprint("target test accuracy: %.4f, target test loss: %.4f" % (trgt_test_acc, trgt_best_val_loss))
 io.cprint("Test confusion matrix:")
 io.cprint('\n' + str(trgt_conf_mat))
+
+#1-72:00:00

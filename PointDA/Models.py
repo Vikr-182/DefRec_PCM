@@ -69,6 +69,8 @@ class fc_layer(nn.Module):
             self.ac = nn.ReLU(inplace=True)
         elif activation == 'leakyrelu':
             self.ac = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        elif activation == 'sigmoid':
+            self.ac = nn.Sigmoid()
         if bn:
             self.fc = nn.Sequential(
                 nn.Linear(in_ch, out_ch, bias=bias),
@@ -234,14 +236,19 @@ class DGCNN(nn.Module):
         x4 = x.max(dim=-1, keepdim=False)[0]
 
         x_cat = torch.cat((x1, x2, x3, x4), dim=1)
-        x5 = F.leaky_relu(self.bn5(self.conv5(x_cat)), negative_slope=0.2)
+        
+        if self.args.use_sigmoid:
+            x5 = torch.sigmoid(self.bn5(self.conv5(x_cat))) # Change for DeepJDOT 
+        else:
+            x5 = F.leaky_relu(self.bn5(self.conv5(x_cat)), negative_slope=0.2)
+        
 
         # Per feature take the point that have the highest (absolute) value.
         # Generate a feature vector for the whole shape
         x5 = F.adaptive_avg_pool1d(x5, 1).view(batch_size, -1)
         x = x5
 
-        logits["cls"], embeddings = self.C(x)
+        logits["cls"] = self.C(x)
         if self.args.DeepJDOT_head:
             logits["DeepJDOT"], embeddings = self.DeepJDOT(x)
 
@@ -269,9 +276,9 @@ class classifier(nn.Module):
 
     def forward(self, x):
         x = self.dp1(self.mlp1(x))
-        x2 = self.dp2(self.mlp2(x))
-        logits = self.mlp3(x2)
-        return logits, x2
+        x2 = self.mlp2(x)
+        logits = self.mlp3(self.dp2(x2))
+        return logits
 
 
 class RegionReconstruction(nn.Module):
