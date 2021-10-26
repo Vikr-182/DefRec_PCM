@@ -144,7 +144,7 @@ class PointNet(nn.Module):
         self.C = classifier(args, num_class)
         self.DefRec = RegionReconstruction(args, num_f_prev + 1024)
 
-    def forward(self, x, activate_DefRec=False):
+    def forward(self, x, activate_DefRec=False, return_intermediate=False):
         num_points = x.size(2)
         x = torch.unsqueeze(x, dim=3)
 
@@ -177,6 +177,18 @@ class PointNet(nn.Module):
         if activate_DefRec:
             DefRec_input = torch.cat((x_cat.squeeze(dim=3), x5.repeat(1, 1, num_points)), dim=1)
             logits["DefRec"] = self.DefRec(DefRec_input)
+
+        logits["cls"], embeddings = self.C(x)
+        if self.args.DeepJDOT_head:
+            logits["DeepJDOT"], embeddings = self.DeepJDOT(x)
+
+        if activate_DefRec:
+            DefRec_input = torch.cat((x_cat, x5.unsqueeze(2).repeat(1, 1, num_points)), dim=1)
+            logits["DefRec"] = self.DefRec(DefRec_input)
+
+        if return_intermediate:
+            return logits, embeddings
+
 
         return logits
 
