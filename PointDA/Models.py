@@ -189,11 +189,12 @@ class PointNet(nn.Module):
 
 
 class DGCNN(nn.Module):
-    def __init__(self, args, num_class=10):
+    def __init__(self, args, num_class=10, num_rotations=6):
         super(DGCNN, self).__init__()
         self.args = args
         self.k = K
         self.deepJDOT_head=False
+        self.num_rotations=num_rotations
 
         self.input_transform_net = transform_net(args, 6, 3)
 
@@ -207,6 +208,11 @@ class DGCNN(nn.Module):
         self.conv5 = nn.Conv1d(num_f_prev, 1024, kernel_size=1, bias=False)
 
         self.C = classifier(args, num_class)
+        if args.rotation_regressor:
+            self.C2 = regressor(args, num_rotations * 3) # for angles
+            self.R = regressor(args, num_rotations) # for axis
+        elif args.rotation_classifier:
+            self.C2 = classifier(args, num_rotations) # out of K
         self.DeepJDOT = classifier(args, num_class)
         self.DefRec = RegionReconstruction(args, num_f_prev + 1024)
 
@@ -249,6 +255,10 @@ class DGCNN(nn.Module):
         x = x5
 
         logits["cls"] = self.C(x)
+        logits["rtn"] = self.C2(x)
+        if self.args.rotation_regressor:
+            logits["reg"] = self.R(x)
+        
         if self.args.DeepJDOT_head:
             logits["DeepJDOT"], embeddings = self.DeepJDOT(x)
 
@@ -258,6 +268,26 @@ class DGCNN(nn.Module):
 
         if return_intermediate:
             return logits, x #torch.nn.functional.softmax(x,-1)
+        return logits
+
+class regressor(nn.Module):
+    def __init__(self, args, num_vals=3):
+        super(regressor, self).__init__()
+
+        activate = 'leakyrelu' if args.model == 'dgcnn' else 'relu'
+        bias = True if args.model == 'dgcnn' else False
+
+        self.mlp1 = fc_layer(1024, 512, bias=bias, activation=activate, bn=True)
+        self.dp1 = nn.Dropout(p=args.dropout)
+        self.mlp2 = fc_layer(512, 256, bias=True, activation=activate, bn=True)
+        self.dp2 = nn.Dropout(p=args.dropout)
+        self.mlp3 = nn.Linear(256, num_vals)
+        self.activation = nn.Softmax(1)
+
+    def forward(self, x):
+        x = self.dp1(self.mlp1(x))
+        x2 = self.mlp2(x)
+        logits = self.activation(self.mlp3(self.dp2(x2))) # should sum to 1
         return logits
 
 

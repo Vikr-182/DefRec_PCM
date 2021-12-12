@@ -11,6 +11,7 @@ import argparse
 import ot
 import copy
 import utils.log
+from utils.pc_utils import *
 import wandb
 from PointDA.data.dataloader import ScanNet, ModelNet, ShapeNet, label_to_idx
 from PointDA.Models import PointNet, DGCNN
@@ -25,6 +26,29 @@ import wandb
 
 NWORKERS=20
 MAX_LOSS = 9 * (10**9)
+NUM_ROTATIONS = 6 # can be controlled
+SAMPLES = []
+pi = np.pi
+
+if NUM_ROTATIONS == 6:
+    SAMPLES = np.array([
+        [pi/4, 0, 0],
+        [-pi/4, 0, 0],
+        [0, pi/4, 0],
+        [0, -pi/4, 0],
+        [0, 0, pi/4],
+        [0, 0, -pi/4]
+    ])
+elif NUM_ROTATIONS == 18:
+    SAMPLES = np.array([
+        [pi/4, 0, 0],
+          
+        [-pi/4, 0, 0],
+        [0, pi/4, 0],
+        [0, -pi/4, 0],
+        [0, 0, pi/4],
+        [0, 0, -pi/4]
+    ])    
 
 def str2bool(v):
     """
@@ -77,6 +101,8 @@ parser.add_argument('--use_DeepJDOT', type=str2bool, default=True, help='Use Dee
 parser.add_argument('--DeepJDOT_head', type=str2bool, default=False, help='Another head for DeepJDOT')
 parser.add_argument('--DefRec_on_trgt', type=str2bool, default=True, help='Using DefRec in source')
 parser.add_argument('--DeepJDOT_classifier', type=str2bool, default=False, help='Using JDOT head for classification')
+parser.add_argument('--rotation_regressor', type=str2bool, default=False, help='Rotation 4D regressor')
+parser.add_argument('--rotation_classifier', type=str2bool, default=False, help='Rotation Classifier for K rotations')
 parser.add_argument('--jdot_alpha', type=float, default=0.001, help='JDOT Alpha')
 parser.add_argument('--jdot_sloss', type=float, default=1.0, help='JDOT Weight for Source Classification')
 parser.add_argument('--jdot_tloss', type=float, default=0.0001, help='JDOT Weight for Target Classification')
@@ -339,16 +365,45 @@ src_best_val_acc = trgt_best_val_acc = best_val_epoch = 0
 src_best_val_loss = trgt_best_val_loss = MAX_LOSS
 best_model = io.save_model(model)
 
+
+
+
+
+
+# rotation head
+# ==================
+# preparing data for rotation
+# ==================
+# Randomly generate the axis for rotation,and the normalize to unit vectors
+rotation_alpha = args.rotation_alpha
+def calc_rotation_loss(src_logits, rotation_axis, rotation_angles, one_hot_labels=None):
+    if args.rotation_regressor:
+        criterion = nn.MSELoss()
+        loss = criterion(torch.tensor(src_logits['rtn']), torch.tensor(rotation_axis))
+        loss += criterion(torch.tensor(src_logits['reg']), torch.tensor(rotation_angles))
+    else:
+        criterion = nn.CrossEntropyLoss()
+        y_gt = torch.nn.functional.one_hot(one_hot_labels, num_classes=NUM_ROTATIONS).type(torch.float64)
+        loss = criterion(torch.tensor(src_logits['rtn']), y_gt)
+    return loss
+    
+rotation_axis = (np.random.random(size=(NUM_ROTATIONS, 3)) - 0.5) * 2
+rotation_axis = rotation_axis / np.linalg.norm(rotation_axis, axis=-1, keepdims=True)
+# the angles range from 0 to pi
+rotation_angles = np.random.random(size=(NUM_ROTATIONS, 1)) * np.pi
+current_label = np.concatenate((rotation_axis, rotation_angles), axis=1)
+
+
 for epoch in range(args.epochs):
     model.train()
 
     # init data structures for saving epoch stats
     cls_type = 'mixup' if args.apply_PCM else 'cls'
-    src_print_losses = {"total": 0.0, cls_type: 0.0}
+    src_print_losses = {"total": 0.0, cls_type: 0.0, "rotation": 0.0}
     if args.DefRec_on_src:
         src_print_losses['DefRec'] = 0.0
-    trgt_print_losses = {'DefRec': 0.0}
-    deepjdot_print_losses = {"total": 0.0, "cat": 0.0, "align": 0.0}
+    trgt_print_losses = {'DefRec': 0.0, "rotation": 0.0}
+    deepjdot_print_losses = {"total": 0.0, "cat": 0.0, "align": 0.0, "rotation": 0.0}
     src_count = trgt_count = deepjdot_count =  0.0
 
     batch_idx = 1
@@ -356,7 +411,7 @@ for epoch in range(args.epochs):
     for data1, data2 in tqdm.tqdm(zip(src_train_loader, trgt_train_loader)): #total=len(src_trainset.train_ind) // args.batch_size
         opt.zero_grad()
         cnt = cnt + 1
-
+        
         #### source data ####
         if data1 is not None:
             src_data, src_label = data1[0].to(device), data1[1].to(device).squeeze()
@@ -369,38 +424,47 @@ for epoch in range(args.epochs):
             # self-supervised
             if args.DefRec_on_src:
                 src_data, src_mask = DefRec.deform_input(src_data, lookup, args.DefRec_dist, device)
+                if args.rotation_regressor: src_data = rotate_point_cloud_by_axis_angle(src_data, rotation_axis, rotation_angles)                    
                 src_logits = model(src_data, activate_DefRec=True)
                 loss = DefRec.calc_loss(args, src_logits, src_data_orig, src_mask)
                 src_print_losses['DefRec'] += loss.item() * batch_size
+                if args.rotation_regressor: src_print_losses['rotation'] += calc_rotation_loss(src_logits, rotation_axis, rotation_angles)
                 src_print_losses['total'] += loss.item() * batch_size
-                if cnt % 5 == 0: 
+                if cnt % 5 == 0:
                     wandb.log({"defrec_ssl_src_loss": loss.item()})
-                loss.backward()
-
+                    if args.rotation_regressor: wandb.log({"rotation_src_loss": calc_rotation_loss(src_logits, rotation_axis, rotation_angles).item()})
+                loss.backward()                
+                
             # supervised
             if args.supervised:
                 if args.apply_PCM:
                     src_data = src_data_orig.clone()
+                    if args.rotation_regressor: src_data = rotate_point_cloud_by_axis_angle(src_data, rotation_axis, rotation_angles)                    
                     src_data, mixup_vals = PCM.mix_shapes(args, src_data, src_label)
                     src_cls_logits = model(src_data, activate_DefRec=False)
                     #print(src_cls_logits)
                     #print(src_cls_logits['cls'].shape, 'cls')
                     loss = PCM.calc_loss(args, src_cls_logits, mixup_vals, criterion)
                     src_print_losses['mixup'] += loss.item() * batch_size
+                    if args.rotation_regressor: src_print_losses['rotation'] += calc_rotation_loss(src_logits, rotation_axis, rotation_angles)                    
                     src_print_losses['total'] += loss.item() * batch_size
                     if cnt % 5 == 0:
                         wandb.log({"pcm_src_loss": loss.item()})
+                        if args.rotation_regressor: wandb.log({"rotation_src_loss": calc_rotation_loss(src_logits, rotation_axis, rotation_angles).item()})                        
                     loss.backward()
 
                 else:
                     src_data = src_data_orig.clone()
                     # predict with undistorted shape
+                    if args.rotation_regressor: src_data = rotate_point_cloud_by_axis_angle(src_data, rotation_axis, rotation_angles)                    
                     src_cls_logits = model(src_data, activate_DefRec=False)
                     loss = (1 - args.DefRec_weight) * criterion(src_cls_logits["cls"], src_label)
                     src_print_losses['cls'] += loss.item() * batch_size
+                    if args.rotation_regressor: src_print_losses['rotation'] += calc_rotation_loss(src_logits, rotation_axis, rotation_angles)                                        
                     src_print_losses['total'] += loss.item() * batch_size
                     if cnt % 5 == 0:                    
                         wandb.log({"defrec_src_loss": loss.item()})
+                        if args.rotation_regressor: wandb.log({"rotation_src_loss": calc_rotation_loss(src_logits, rotation_axis, rotation_angles).item()})                                                
                     loss.backward()
 
             src_count += batch_size
@@ -414,12 +478,15 @@ for epoch in range(args.epochs):
                 trgt_data_orig = trgt_data.clone()
                 device = torch.device("cuda:" + str(trgt_data.get_device()) if args.cuda else "cpu")
 
-                trgt_data, trgt_mask = DefRec.deform_input(trgt_data, lookup, args.DefRec_dist, device)
+                if args.rotation_regressor: trgt_data = rotate_point_cloud_by_axis_angle(trgt_data, rotation_axis, rotation_angles)                    
+                trgt_data, trgt_mask = DefRec.deform_input(trgt_data, lookup, args.DefRec_dist, device)                
                 trgt_logits = model(trgt_data, activate_DefRec=True)
                 loss = DefRec.calc_loss(args, trgt_logits, trgt_data_orig, trgt_mask)
                 trgt_print_losses['DefRec'] += loss.item() * batch_size
+                if args.rotation_regressor: trgt_print_losses['rotation'] += calc_rotation_loss(trgt_logits, rotation_axis, rotation_angles)                
                 if cnt % 5 == 0:                
                     wandb.log({"defrec_trgt_loss": loss.item()})
+                    if args.rotation_regressor: wandb.log({"rotation_trgt_loss": calc_rotation_loss(src_logits, rotation_axis, rotation_angles).item()})                                                                    
                 loss.backward()
             trgt_count += batch_size
             

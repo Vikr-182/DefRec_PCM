@@ -1,6 +1,7 @@
 import torch
 import numpy as np
-
+import math
+from functools import reduce
 
 eps = 10e-4
 eps2 = 10e-6
@@ -275,3 +276,176 @@ def scale_to_unit_cube(x):
     furthest_distance = np.max(np.sqrt(np.sum(abs(x) ** 2, axis=-1)))
     x /= furthest_distance
     return x
+
+
+def euler2mat(z=0, y=0, x=0):
+    ''' Return matrix for rotations around z, y and x axes
+    Uses the z, then y, then x convention above
+    Parameters
+    ----------
+    z : scalar
+       Rotation angle in radians around z-axis (performed first)
+    y : scalar
+       Rotation angle in radians around y-axis
+    x : scalar
+       Rotation angle in radians around x-axis (performed last)
+    Returns
+    -------
+    M : array shape (3,3)
+       Rotation matrix giving same rotation as for given angles
+    Examples
+    --------
+    >>> zrot = 1.3 # radians
+    >>> yrot = -0.1
+    >>> xrot = 0.2
+    >>> M = euler2mat(zrot, yrot, xrot)
+    >>> M.shape == (3, 3)
+    True
+    The output rotation matrix is equal to the composition of the
+    individual rotations
+    >>> M1 = euler2mat(zrot)
+    >>> M2 = euler2mat(0, yrot)
+    >>> M3 = euler2mat(0, 0, xrot)
+    >>> composed_M = np.dot(M3, np.dot(M2, M1))
+    >>> np.allclose(M, composed_M)
+    True
+    You can specify rotations by named arguments
+    >>> np.all(M3 == euler2mat(x=xrot))
+    True
+    When applying M to a vector, the vector should column vector to the
+    right of M.  If the right hand side is a 2D array rather than a
+    vector, then each column of the 2D array represents a vector.
+    >>> vec = np.array([1, 0, 0]).reshape((3,1))
+    >>> v2 = np.dot(M, vec)
+    >>> vecs = np.array([[1, 0, 0],[0, 1, 0]]).T # giving 3x2 array
+    >>> vecs2 = np.dot(M, vecs)
+    Rotations are counter-clockwise.
+    >>> zred = np.dot(euler2mat(z=np.pi/2), np.eye(3))
+    >>> np.allclose(zred, [[0, -1, 0],[1, 0, 0], [0, 0, 1]])
+    True
+    >>> yred = np.dot(euler2mat(y=np.pi/2), np.eye(3))
+    >>> np.allclose(yred, [[0, 0, 1],[0, 1, 0], [-1, 0, 0]])
+    True
+    >>> xred = np.dot(euler2mat(x=np.pi/2), np.eye(3))
+    >>> np.allclose(xred, [[1, 0, 0],[0, 0, -1], [0, 1, 0]])
+    True
+    Notes
+    -----
+    The direction of rotation is given by the right-hand rule (orient
+    the thumb of the right hand along the axis around which the rotation
+    occurs, with the end of the thumb at the positive end of the axis;
+    curl your fingers; the direction your fingers curl is the direction
+    of rotation).  Therefore, the rotations are counterclockwise if
+    looking along the axis of rotation from positive to negative.
+    '''
+    Ms = []
+    if z:
+        cosz = math.cos(z)
+        sinz = math.sin(z)
+        Ms.append(np.array(
+                [[cosz, -sinz, 0],
+                 [sinz, cosz, 0],
+                 [0, 0, 1]]))
+    if y:
+        cosy = math.cos(y)
+        siny = math.sin(y)
+        Ms.append(np.array(
+                [[cosy, 0, siny],
+                 [0, 1, 0],
+                 [-siny, 0, cosy]]))
+    if x:
+        cosx = math.cos(x)
+        sinx = math.sin(x)
+        Ms.append(np.array(
+                [[1, 0, 0],
+                 [0, cosx, -sinx],
+                 [0, sinx, cosx]]))
+    if Ms:
+        return reduce(np.dot, Ms[::-1])
+    return np.eye(3)
+
+def rotate_point_cloud_by_angle_xyz(batch_data, angle_x=0, angle_y=0, angle_z=0):
+    """ Rotate the point cloud along up direction with certain angle.
+        Rotate in the order of x, y and then z.
+        Input:
+          BxNx3 array, original batch of point clouds
+        Return:
+          BxNx3 array, rotated batch of point clouds
+    """
+    rotated_data = batch_data.reshape((-1, 3))
+    
+    cosval = np.cos(angle_x)
+    sinval = np.sin(angle_x)
+    rotation_matrix = np.array([[1, 0, 0],
+                                [0, cosval, -sinval],
+                                [0, sinval, cosval]])
+    rotated_data = np.dot(rotated_data, rotation_matrix)
+
+    cosval = np.cos(angle_y)
+    sinval = np.sin(angle_y)
+    rotation_matrix = np.array([[cosval, 0, sinval],
+                                [0, 1, 0],
+                                [-sinval, 0, cosval]])
+    rotated_data = np.dot(rotated_data, rotation_matrix)
+
+    cosval = np.cos(angle_z)
+    sinval = np.sin(angle_z)
+    rotation_matrix = np.array([[cosval, -sinval, 0],
+                                [sinval, cosval, 0],
+                                [0, 0, 1]])
+    rotated_data = np.dot(rotated_data, rotation_matrix)
+    
+    return rotated_data.reshape(batch_data.shape)
+
+
+def rotate_point_cloud_by_angle_list(batch_data, rotation_angles):
+    """ Rotate the point cloud along up direction with certain angle list.
+        Input:
+          BxNx3 array, original batch of point clouds
+        Return:
+          BxNx3 array, rotated batch of point clouds
+    """
+    rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+    for k in range(batch_data.shape[0]):
+        #rotation_angle = np.random.uniform() * 2 * np.pi
+        cosval = np.cos(rotation_angles[k])
+        sinval = np.sin(rotation_angles[k])
+        rotation_matrix = np.array([[cosval, 0, sinval],
+                                    [0, 1, 0],
+                                    [-sinval, 0, cosval]])
+        shape_pc = batch_data[k, ...]
+        rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+    return rotated_data
+
+def rotate_point_cloud_by_axis_angle(batch_data_, u_, theta_):
+    """ Rotate the point cloud around the axis u by angle theta
+        u is a list of tuples, B * (x,y,z), consisting of unit vectors of the axis
+        theta is a list of angles, B length array, representing the angle
+        Input:
+          BxNx3 array, original batch of point clouds
+        Return:
+          BxNx3 array, rotated batch of point clouds
+    """
+    batch_data = batch_data_.detach().numpy()
+    u = u_
+    theta = theta_
+    u = np.squeeze(u)
+    theta = np.squeeze(theta)
+    eps = 1e-6
+    rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+    for k in range(batch_data.shape[0]):
+        x, y, z = u[k]
+        assert 1-eps < x*x+y*y+z*z < 1+eps
+
+        cosval = np.cos(theta[k])
+        sinval = np.sin(theta[k])
+
+        rotation_matrix = np.array([[cosval + x*x*(1-cosval), x*y*(1-cosval) - z*sinval, x*z*(1-cosval) + y*sinval],
+                                    [y*x*(1-cosval) + z*sinval, cosval + y*y*(1-cosval), y*z*(1-cosval) - x*sinval],
+                                    [z*x*(1-cosval) - y*sinval, z*y*(1-cosval) + x*sinval, cosval + z*z*(1-cosval)]])
+        
+
+        shape_pc = batch_data[k, ...]
+        rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+    
+    return torch.tensor(rotated_data, dtype=batch_data_.dtype)
