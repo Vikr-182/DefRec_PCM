@@ -189,7 +189,7 @@ class PointNet(nn.Module):
 
 
 class DGCNN(nn.Module):
-    def __init__(self, args, num_class=10, num_rotations=6):
+    def __init__(self, args, num_class=10, num_rotations=1):
         super(DGCNN, self).__init__()
         self.args = args
         self.k = K
@@ -255,8 +255,9 @@ class DGCNN(nn.Module):
         x = x5
 
         logits["cls"] = self.C(x)
-        logits["rtn"] = self.C2(x)
+        if self.args.rotation_classifier: logits["rtn"] = self.C2(x)
         if self.args.rotation_regressor:
+            logits["rtn"] = self.C2(x)
             logits["reg"] = self.R(x)
         
         if self.args.DeepJDOT_head:

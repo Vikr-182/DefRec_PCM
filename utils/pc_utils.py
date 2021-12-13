@@ -426,26 +426,29 @@ def rotate_point_cloud_by_axis_angle(batch_data_, u_, theta_):
         Return:
           BxNx3 array, rotated batch of point clouds
     """
-    batch_data = batch_data_.detach().numpy()
+    batch_data = batch_data_#.cpu().detach().numpy()
     u = u_
     theta = theta_
     u = np.squeeze(u)
     theta = np.squeeze(theta)
     eps = 1e-6
-    rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
+    rotated_data = torch.zeros(batch_data.shape, dtype=batch_data_.dtype)
+
+    print(batch_data.shape)#rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
     for k in range(batch_data.shape[0]):
         x, y, z = u[k]
         assert 1-eps < x*x+y*y+z*z < 1+eps
 
-        cosval = np.cos(theta[k])
-        sinval = np.sin(theta[k])
+        cosval = torch.cos(torch.tensor(theta[k]))
+        sinval = torch.sin(torch.tensor(theta[k]))
 
-        rotation_matrix = np.array([[cosval + x*x*(1-cosval), x*y*(1-cosval) - z*sinval, x*z*(1-cosval) + y*sinval],
+        rotation_matrix = torch.tensor([[cosval + x*x*(1-cosval), x*y*(1-cosval) - z*sinval, x*z*(1-cosval) + y*sinval],
                                     [y*x*(1-cosval) + z*sinval, cosval + y*y*(1-cosval), y*z*(1-cosval) - x*sinval],
-                                    [z*x*(1-cosval) - y*sinval, z*y*(1-cosval) + x*sinval, cosval + z*z*(1-cosval)]])
+                                    [z*x*(1-cosval) - y*sinval, z*y*(1-cosval) + x*sinval, cosval + z*z*(1-cosval)]], dtype=batch_data_.dtype)
         
 
         shape_pc = batch_data[k, ...]
-        rotated_data[k, ...] = np.dot(shape_pc.reshape((-1, 3)), rotation_matrix)
+        rotation_matrix = rotation_matrix.to(shape_pc.device)
+        rotated_data[k, ...] = torch.matmul(shape_pc.reshape((-1, 3)), rotation_matrix).reshape(3, 1024)
     
-    return torch.tensor(rotated_data, dtype=batch_data_.dtype)
+    return torch.tensor(rotated_data, dtype=batch_data_.dtype).to(batch_data_.device)
