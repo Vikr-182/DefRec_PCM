@@ -31,5 +31,5 @@ echo "LALA" >> lala.txt
 cd /scratch/shapenets/pointda
 unzip PointDA_data.zip
 cd ~/pcc/DefRec_and_PCM
-python3 PointDA/trainer.py --dataroot /scratch/shapenets/pointda --batch_size 16 --use_DeepJDOT True --rotation_regressor True --apply_PCM False --DefRec_on_src False
+python3 PointDA/trainer.py --dataroot /scratch/shapenets/pointda --batch_size 16 --use_DeepJDOT False --separate_rotation True --apply_PCM False --DefRec_on_src False
 echo "Done Training"
